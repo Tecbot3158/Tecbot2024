@@ -24,12 +24,12 @@ import frc.robot.subsystems.DriveTrain;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_drivetrainSubsystem = new DriveTrain();
 
   private final XboxController m_controller = new XboxController(0);
-  private EventLoop loop;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */

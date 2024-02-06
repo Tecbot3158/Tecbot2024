@@ -4,10 +4,10 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveTrain;
 
-public class ZeroGyroCommand extends CommandBase {
+public class ZeroGyroCommand extends Command {
   /** Creates a new ZeroGyroCommand. */
   DriveTrain dt;
   public ZeroGyroCommand(DriveTrain dt) {
