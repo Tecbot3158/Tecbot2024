@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Shooter;
 
 
 /**
@@ -27,6 +29,9 @@ import frc.robot.subsystems.DriveTrain;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_drivetrainSubsystem = new DriveTrain();
+
+  private final Shooter shooter;
+  private final Climber climber;
 
   private final XboxController m_controller = new XboxController(0);
   private EventLoop loop;
@@ -40,6 +45,9 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
+    shooter = new Shooter();
+
+    climber = new Climber();
 
     DefaultDriveCommand ddc = new DefaultDriveCommand(
       m_drivetrainSubsystem,
@@ -59,6 +67,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    OI.getInstance().configureButtonBindings();
     // Back button zeros the gyroscope
     BooleanSupplier backButton = () -> {
       return m_controller.getBackButton();
@@ -66,6 +75,14 @@ public class RobotContainer {
     Trigger backButtonTrigger = new Trigger(backButton);
     backButtonTrigger.onTrue( new ZeroGyroCommand(m_drivetrainSubsystem) );
     
+  }
+
+  public Shooter getShooter(){
+    return shooter;
+  }
+
+  public Climber getClimber(){
+    return climber;
   }
 
   /**

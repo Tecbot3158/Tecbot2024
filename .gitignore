@@ -170,10 +170,3 @@ out/
 
 # Simulation GUI and other tools window save file
 *-window.json
-gradlew
-gradlew.bat
-vendordeps/SdsSwerveLib.json
-vendordeps/REVLib.json
-.vscode/launch.json
-.vscode/settings.json
-.wpilib/wpilib_preferences.json
