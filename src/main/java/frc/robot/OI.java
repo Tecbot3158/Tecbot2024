@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.commands.EditableShooterVelocity;
+import frc.robot.commands.GroundIntake;
 import frc.robot.commands.OffL;
 /*import frc.robot.commands.S1F;
 import frc.robot.commands.S2F;
@@ -33,6 +34,7 @@ public class OI {
         pilot.whenPressed(ButtonType.B, new OffShooter());
         pilot.whenPressed(ButtonType.X, new OnShooter3());
         pilot.whenPressed(ButtonType.Y, new OnShooter());
+        pilot.whenPressed(ButtonType.RB, new GroundIntake(0, 0, 0.1));
         pilot.whenPressed(ButtonType.POV_DOWN, new EditableShooterVelocity());
 
 

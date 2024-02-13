@@ -17,6 +17,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.RampSubsystem;
 import frc.robot.subsystems.Shooter;
 
 
@@ -32,6 +33,7 @@ public class RobotContainer {
 
   private final Shooter shooter;
   private final Climber climber;
+  private final RampSubsystem rampSubsystem;
 
   private final XboxController m_controller = new XboxController(0);
   private EventLoop loop;
@@ -46,8 +48,8 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
     shooter = new Shooter();
-
     climber = new Climber();
+    rampSubsystem = new RampSubsystem();
 
     DefaultDriveCommand ddc = new DefaultDriveCommand(
       m_drivetrainSubsystem,
@@ -83,6 +85,10 @@ public class RobotContainer {
 
   public Climber getClimber(){
     return climber;
+  }
+
+  public RampSubsystem getRampSubsystem(){
+    return rampSubsystem;
   }
 
   /**

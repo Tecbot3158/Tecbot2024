@@ -30,10 +30,6 @@ public static final int s8Ports[] = {PCM_1_PORT, 7, 8};
 
 public static final int shooterPorts[] = {13, 14};
 
-public static final int climberPorts[] = {15, 16};
 
-public static double sm1Speed = .7;
-
-public static double sm2Speed = -.9;
-
+public static final int intakePort[] = {15};
 }

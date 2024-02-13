@@ -60,8 +60,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    Robot.getRobotContainer().getClimber().onR();
-    Robot.getRobotContainer().getClimber().onL();
+    /*Robot.getRobotContainer().getClimber().onR();
+    Robot.getRobotContainer().getClimber().onL();*/
   }
 
   @Override

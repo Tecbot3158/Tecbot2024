@@ -17,10 +17,10 @@ public class Climber extends SubsystemBase {
   XboxController xbox;
 
   public Climber(){
-   cm1 = new TecbotSpeedController(RobotMap.climberPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
+   /*cm1 = new TecbotSpeedController(RobotMap.climberPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
    cm2 = new TecbotSpeedController(RobotMap.climberPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
 
-   xbox = new XboxController(0);
+   xbox = new XboxController(0);*/
   }
       
 
@@ -29,7 +29,7 @@ public class Climber extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void onL(){
+  /*public void onL(){
     if(xbox.getRightTriggerAxis()<=0.3){
       cm1.set(-.5);
     }
@@ -61,7 +61,7 @@ public class Climber extends SubsystemBase {
   public void triggerClimber(){
     cm1.set(0.5);
     cm2.set(0.5);
-  }
+  }*/
 }
 
 
