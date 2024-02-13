@@ -4,68 +4,91 @@
 
 package frc.robot;
 
-import java.util.function.DoubleSupplier;
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Autonomous1;
+import frc.robot.commands.Autonomous2;
+import frc.robot.commands.Autonomous3;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.GoForwardWithE;
+import frc.robot.commands.Regreso;
 import frc.robot.subsystems.DriveTrain;
-
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
+ * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain m_drivetrainSubsystem = new DriveTrain();
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final XboxController m_controller = new XboxController(0);
-  private EventLoop loop;
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+      public static DriveTrain driveTrain;
+      public static OI oi;
+      public static Shooter shooter;
+      public static Intake intake;
+
+      public static Autonomous1 a1;
+      public static Autonomous2 a2;
+      public static Autonomous3 a3;
+
+      private SendableChooser<Command> m_auto_Chooser;
+
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Configure the trigger bindings
+    driveTrain = new DriveTrain();
+    shooter = new Shooter();
+    intake = new Intake();
+    oi = new OI();
+    a1 = new Autonomous1();
+    a2 = new Autonomous2();
+    a3 = new Autonomous3();
+    configureBindings();  
+
+    m_auto_Chooser = new SendableChooser<Command>();
+
+    m_auto_Chooser.setDefaultOption("Autonomous 1", new Autonomous1());
+    m_auto_Chooser.addOption("Autonomous 2", new Autonomous2());
+    m_auto_Chooser.addOption("Autonomous 3", new Autonomous3());
+    m_auto_Chooser.addOption("Encoders", new GoForwardWithE());
+    m_auto_Chooser.addOption("Regreso", new Regreso());
+ 
+    SmartDashboard.putData(m_auto_Chooser);
     
-    // Set up the default command for the drivetrain.
-    // The controls are for field-oriented driving:
-    // Left stick Y axis -> forward and backwards movement
-    // Left stick X axis -> left and right movement
-    // Right stick X axis -> rotation
-
-    DefaultDriveCommand ddc = new DefaultDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -modifyAxis(m_controller.getLeftY()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(m_controller.getLeftX()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(m_controller.getRightX()) * DriveTrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND );
-    m_drivetrainSubsystem.setDefaultCommand(ddc);
-
-    // Configure the button bindings
-    configureButtonBindings();
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
    */
-  private void configureButtonBindings() {
-    // Back button zeros the gyroscope
-    BooleanSupplier backButton = () -> {
-      return m_controller.getBackButton();
-    };
-    Trigger backButtonTrigger = new Trigger(backButton);
-    backButtonTrigger.onTrue( new ZeroGyroCommand(m_drivetrainSubsystem) );
-    
+  private void configureBindings() {
+    OI.getInstance().configureButtonBindings();
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    new Trigger(m_exampleSubsystem::exampleCondition)
+        .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -73,30 +96,32 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
+
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new InstantCommand();
+    // An example command will be run in autonomous
+    return m_auto_Chooser.getSelected();
   }
 
-  private static double deadband(double value, double deadband) {
-    if (Math.abs(value) > deadband) {
-      if (value > 0.0) {
-        return (value - deadband) / (1.0 - deadband);
-      } else {
-        return (value + deadband) / (1.0 - deadband);
-      }
-    } else {
-      return 0.0;
-    }
+  
+
+  
+
+
+
+  public static DriveTrain getDriveTrain(){
+    return driveTrain;
   }
 
-  private static double modifyAxis(double value) {
-    // Deadband
-    value = deadband(value, 0.05);
+  public static OI getOI(){
+    return oi;
+  }
 
-    // Square the axis
-    value = Math.copySign(value * value, value);
+  public static Shooter getShooter(){
+    return shooter;
+  }
 
-    return value;
+  public static Intake getIntake(){
+    return intake;
   }
 }
