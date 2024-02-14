@@ -31,8 +31,8 @@ public class OI {
 
 
     public void configureButtonBindings(){
-        pilot.whenPressed(ButtonType.A, new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.1));
-        pilot.whenPressed(ButtonType.B, new RampAction(robotContainer.getRampSubsystem(), 0.4, 0.4, 0.1));
+        pilot.whileHeld(ButtonType.A, new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.1));
+        pilot.whileHeld(ButtonType.B, new RampAction(robotContainer.getRampSubsystem(), 0.4, 0.4, 0.1));
 
 
 
