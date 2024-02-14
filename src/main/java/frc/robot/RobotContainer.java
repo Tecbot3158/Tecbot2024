@@ -18,7 +18,6 @@ import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSubsystem;
-import frc.robot.subsystems.Shooter;
 
 
 /**
@@ -30,9 +29,7 @@ import frc.robot.subsystems.Shooter;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_drivetrainSubsystem = new DriveTrain();
-
-  private final Shooter shooter;
-  private final Climber climber;
+  //private final Climber climber;
   private final RampSubsystem rampSubsystem;
 
   private final XboxController m_controller = new XboxController(0);
@@ -47,9 +44,10 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
-    shooter = new Shooter();
-    climber = new Climber();
+
+    //climber = new Climber();
     rampSubsystem = new RampSubsystem();
+    //climber.setController(m_controller);
 
     DefaultDriveCommand ddc = new DefaultDriveCommand(
       m_drivetrainSubsystem,
@@ -59,7 +57,6 @@ public class RobotContainer {
     m_drivetrainSubsystem.setDefaultCommand(ddc);
 
     // Configure the button bindings
-    configureButtonBindings();
   }
 
   /**
@@ -68,24 +65,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
-    OI.getInstance().configureButtonBindings();
-    // Back button zeros the gyroscope
-    BooleanSupplier backButton = () -> {
-      return m_controller.getBackButton();
-    };
-    Trigger backButtonTrigger = new Trigger(backButton);
-    backButtonTrigger.onTrue( new ZeroGyroCommand(m_drivetrainSubsystem) );
-    
-  }
 
-  public Shooter getShooter(){
-    return shooter;
-  }
 
-  public Climber getClimber(){
+
+ /*public Climber getClimber(){
     return climber;
-  }
+  }*/
 
   public RampSubsystem getRampSubsystem(){
     return rampSubsystem;

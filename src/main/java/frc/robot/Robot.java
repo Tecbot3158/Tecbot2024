@@ -12,10 +12,12 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private static RobotContainer m_robotContainer;
+  private OI m_oi;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    m_oi = new OI(m_robotContainer);
   }
   
   public static RobotContainer getRobotContainer(){

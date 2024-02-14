@@ -1,4 +1,6 @@
 package frc.robot.subsystems;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
@@ -34,6 +36,7 @@ public class RampSubsystem extends SubsystemBase {
     sm1.set(sTopSpeed);
     sm2.set(-sBottomSpeed);
     im1.set(intakeSeed);
+    System.out.println(sTopSpeed);
   }
 }
 

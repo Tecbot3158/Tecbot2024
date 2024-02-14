@@ -30,6 +30,7 @@ public static final int s8Ports[] = {PCM_1_PORT, 7, 8};
 
 public static final int shooterPorts[] = {13, 14};
 
+public static final int climberPorts[] = {16, 17};
 
 public static final int intakePort[] = {15};
 }

@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.resources.TecbotSpeedController;
@@ -13,20 +14,47 @@ import frc.robot.resources.TecbotSpeedController.TypeOfMotor;
 
 
 public class Climber extends SubsystemBase {
-  TecbotSpeedController cm1, cm2;
+  TecbotSpeedController cmL, cmR;
   XboxController xbox;
 
-  public Climber(){
-   /*cm1 = new TecbotSpeedController(RobotMap.climberPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
-   cm2 = new TecbotSpeedController(RobotMap.climberPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
+  ShuffleboardTab tab = Shuffleboard.getTab("Climber");
+    
 
-   xbox = new XboxController(0);*/
+  public Climber(){
+   cmL = new TecbotSpeedController(RobotMap.climberPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
+   cmR = new TecbotSpeedController(RobotMap.climberPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
+
+  
+   xbox = new XboxController(0);
   }
       
+  public void setController(XboxController c1){
+    xbox = c1;
+  }
 
     @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if(xbox != null){
+      double axisLeft = xbox.getLeftTriggerAxis();
+      double axisRight = xbox.getRightTriggerAxis();
+      cmL.set(axisLeft * .1);
+      cmR.set(-axisRight * .1);
+
+      boolean bumperLeft = xbox.getLeftBumper();
+      boolean bumperRight = xbox.getRightBumper();
+
+      if(bumperLeft){
+        cmL.set(axisLeft * -.1);
+      }
+
+      if(bumperRight){
+        cmR.set(axisRight * .1);
+      }
+    }
+
+    SmartDashboard.putNumber("Climber/LeftEncoder", cmL.getCANSparkMax().getEncoder().getPosition());
+    SmartDashboard.putNumber("Climber/RightEncoder", cmR.getCANSparkMax().getEncoder().getPosition());
   }
 
   /*public void onL(){
