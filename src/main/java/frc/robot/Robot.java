@@ -18,6 +18,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     m_oi = new OI(m_robotContainer);
+    m_oi.configureButtonBindings();
   }
   
   public static RobotContainer getRobotContainer(){
