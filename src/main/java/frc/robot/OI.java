@@ -2,7 +2,9 @@ package frc.robot;
 
 import java.security.interfaces.RSAMultiPrimePrivateCrtKey;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.RampAction;
 import frc.robot.commands.OffL;
 /*import frc.robot.commands.S1F;
@@ -21,21 +23,23 @@ import frc.robot.resources.TecbotController.TypeOfController;
 
 public class OI {
     public static OI instance;
-    private TecbotController pilot;
+    private CommandXboxController pilot;
     public RobotContainer robotContainer;
 
-    public OI(RobotContainer rc){
-        pilot = new TecbotController(0, TypeOfController.XBOX);
+    public OI(RobotContainer rc, CommandXboxController c1){
+        pilot = c1;
         robotContainer = rc;
     }
 
 
     public void configureButtonBindings(){
-        pilot.whileHeld(ButtonType.A, new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.1));
-        pilot.whileHeld(ButtonType.B, new RampAction(robotContainer.getRampSubsystem(), 0.4, 0.4, 0.1));
-
-
-
+        //pilot.whileTrue(ButtonType.A, new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.1));
+        // pilot.whileHeld(ButtonType.B, new RampAction(robotContainer.getRampSubsystem(), 0.4, 0.4, 0.1));
+        pilot.a().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.5)  );
+        pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.1, -0.28, 0)  );
+        pilot.x().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.1, -0.28, 0)  );
+        pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.1, -0.28, 0)  );
+        
         /*pilot.whenPressed(ButtonType.LB, new S3F());
         pilot.whenPressed(ButtonType.POV_UP, new S3B());*/
       

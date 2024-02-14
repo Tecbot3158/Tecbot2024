@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
@@ -32,8 +33,8 @@ public class RobotContainer {
   //private final Climber climber;
   private final RampSubsystem rampSubsystem;
 
-  private final XboxController m_controller = new XboxController(0);
-  private EventLoop loop;
+  private final  CommandXboxController m_controller = new CommandXboxController(0);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -47,8 +48,8 @@ public class RobotContainer {
 
     //climber = new Climber();
     rampSubsystem = new RampSubsystem();
-    //climber.setController(m_controller);
-
+    //climber.setController(m_controller.getHID() );
+    
     DefaultDriveCommand ddc = new DefaultDriveCommand(
       m_drivetrainSubsystem,
       () -> -modifyAxis(m_controller.getLeftY()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND,
@@ -59,14 +60,12 @@ public class RobotContainer {
     // Configure the button bindings
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
 
+  public CommandXboxController getPilot(){
 
+    return m_controller;
+
+  }
 
  /*public Climber getClimber(){
     return climber;

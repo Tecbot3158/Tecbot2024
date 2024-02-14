@@ -23,9 +23,6 @@ public class Climber extends SubsystemBase {
   public Climber(){
    cmL = new TecbotSpeedController(RobotMap.climberPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
    cmR = new TecbotSpeedController(RobotMap.climberPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
-
-  
-   xbox = new XboxController(0);
   }
       
   public void setController(XboxController c1){

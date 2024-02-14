@@ -17,7 +17,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    m_oi = new OI(m_robotContainer);
+    m_oi = new OI(m_robotContainer , m_robotContainer.getPilot() );
     m_oi.configureButtonBindings();
   }
   

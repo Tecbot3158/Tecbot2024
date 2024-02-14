@@ -33,10 +33,10 @@ public class RampSubsystem extends SubsystemBase {
   }
 
   public void getRamp(double sTopSpeed, double sBottomSpeed, double intakeSeed){
+    System.out.println(sTopSpeed + " // "  +  sBottomSpeed + " // " + intakeSeed  );
     sm1.set(sTopSpeed);
     sm2.set(-sBottomSpeed);
     im1.set(intakeSeed);
-    System.out.println(sTopSpeed);
   }
 }
 
