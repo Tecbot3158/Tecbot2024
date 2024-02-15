@@ -32,15 +32,17 @@ public class RobotContainer {
   private final XboxController m_controller = new XboxController(0);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
+   * @return 
    */
   public RobotContainer() {
-    
+   
     // Set up the default command for the drivetrain.
     // The controls are for field-oriented driving:
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
 
+    
     DefaultDriveCommand ddc = new DefaultDriveCommand(
       m_drivetrainSubsystem,
       () -> -modifyAxis(m_controller.getLeftY()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND,
@@ -98,5 +100,11 @@ public class RobotContainer {
     value = Math.copySign(value * value, value);
 
     return value;
+  }
+
+  public DriveTrain getDriveTrain() {
+
+    return m_drivetrainSubsystem;
+  
   }
 }
