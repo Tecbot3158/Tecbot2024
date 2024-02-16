@@ -10,6 +10,8 @@ import com.swervedrivespecialties.swervelib.MkSwerveModuleBuilder;
 import com.swervedrivespecialties.swervelib.MotorType;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,10 +19,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -163,6 +168,7 @@ public class DriveTrain extends SubsystemBase {
    * Sets the gyroscope angle to zero. This can be used to set the direction the robot is currently facing to the
    * 'forwards' direction.
    */
+
   public void zeroGyroscope() {
       m_navx.zeroYaw();
   }
@@ -184,7 +190,20 @@ public class DriveTrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-        odometer.update(getGyroscopeRotation(), m_frontLeftModule.getPosition(), m_frontRightModule.getPosition(),m_backLeftModule.getPosition(),m_backRightModule.getPosition());
+
+    SwerveModulePosition positions[] = new SwerveModulePosition[4];
+    positions[0] = m_frontLeftModule.getPosition();
+    positions[1] = m_frontRightModule.getPosition();
+    positions[2] = m_backLeftModule.getPosition();
+    positions[3] = m_backRightModule.getPosition();
+    
+    odometer.update(getGyroscopeRotation(),positions);
+    double PositionX = odometer.getPoseMeters().getX();
+    double PositionY = odometer.getPoseMeters().getY();
+    SmartDashboard.putNumber("X meters", PositionX);
+    SmartDashboard.putNumber("Y meters", PositionY);
+
+
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
