@@ -4,8 +4,10 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.resources.TecbotSpeedController;
@@ -24,13 +26,22 @@ public class RampSubsystem extends SubsystemBase {
 
    sm1.getCANSparkMax().setIdleMode(IdleMode.kCoast);
    sm2.getCANSparkMax().setIdleMode(IdleMode.kCoast);
+
   }
       
 
     @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Top Position", sm1.getCANSparkMax().getEncoder().getPosition());
+    SmartDashboard.putNumber("Bottom Position", sm2.getCANSparkMax().getEncoder().getPosition());
+
+    SmartDashboard.putNumber("Top Velocity", sm1.getCANSparkMax().getEncoder().getVelocity());
+    SmartDashboard.putNumber("Bottom Velocity", sm2.getCANSparkMax().getEncoder().getVelocity());
+
+    //m_rangeFinder.ping();
   }
+
 
   public void getRamp(double sTopSpeed, double sBottomSpeed, double intakeSeed){
     System.out.println(sTopSpeed + " // "  +  sBottomSpeed + " // " + intakeSeed  );

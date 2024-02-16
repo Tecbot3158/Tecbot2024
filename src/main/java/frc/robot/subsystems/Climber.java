@@ -52,6 +52,9 @@ public class Climber extends SubsystemBase {
 
     SmartDashboard.putNumber("Climber/LeftEncoder", cmL.getCANSparkMax().getEncoder().getPosition());
     SmartDashboard.putNumber("Climber/RightEncoder", cmR.getCANSparkMax().getEncoder().getPosition());
+
+    SmartDashboard.putNumber("Climber/LeftEncoder Velocity", cmL.getCANSparkMax().getEncoder().getVelocity());
+    SmartDashboard.putNumber("Climber/RightEncoder Velocity", cmR.getCANSparkMax().getEncoder().getVelocity());
   }
 
   /*public void onL(){

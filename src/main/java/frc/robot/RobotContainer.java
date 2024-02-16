@@ -18,6 +18,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.RampSensorSubsystem;
 import frc.robot.subsystems.RampSubsystem;
 
 
@@ -32,6 +33,7 @@ public class RobotContainer {
   private final DriveTrain m_drivetrainSubsystem = new DriveTrain();
   //private final Climber climber;
   private final RampSubsystem rampSubsystem;
+  private final RampSensorSubsystem rampSensorSubsystem;
 
   private final  CommandXboxController m_controller = new CommandXboxController(0);
 
@@ -48,6 +50,7 @@ public class RobotContainer {
 
     //climber = new Climber();
     rampSubsystem = new RampSubsystem();
+    rampSensorSubsystem = new RampSensorSubsystem();
     //climber.setController(m_controller.getHID() );
     
     DefaultDriveCommand ddc = new DefaultDriveCommand(
@@ -75,6 +78,9 @@ public class RobotContainer {
     return rampSubsystem;
   }
 
+  public RampSensorSubsystem getRampSensorSubsystem(){
+    return rampSensorSubsystem;
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.resources.TecbotPWMLEDStrip;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -14,11 +15,17 @@ public class Robot extends TimedRobot {
   private static RobotContainer m_robotContainer;
   private OI m_oi;
 
+  private TecbotPWMLEDStrip ledStrip;
+
+  private int i = 0;
+
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     m_oi = new OI(m_robotContainer , m_robotContainer.getPilot() );
     m_oi.configureButtonBindings();
+
+  
   }
   
   public static RobotContainer getRobotContainer(){
@@ -28,6 +35,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    //ledStrip.setSolidHSV(69, 255, 255);
   }
 
   @Override
@@ -65,6 +73,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     /*Robot.getRobotContainer().getClimber().onR();
     Robot.getRobotContainer().getClimber().onL();*/
+
+    Robot.getRobotContainer().getRampSensorSubsystem().setNoteSensor(true);
   }
 
   @Override
