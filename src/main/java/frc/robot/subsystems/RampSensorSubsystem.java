@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.resources.TecbotPWMLEDStrip;
 
@@ -24,8 +25,12 @@ public class RampSensorSubsystem extends SubsystemBase {
     public void periodic() {
       // This method will be called once per scheduler run
       if(doSense == true){
-              
-      if(m_rangeFinder.getRangeInches() <= 3){
+      
+      SmartDashboard.putBoolean("Ultrasonic", m_rangeFinder.isEnabled());
+      SmartDashboard.putBoolean("Ultrasonic a", m_rangeFinder.isRangeValid());
+      SmartDashboard.putNumber("Ultrasonic range", m_rangeFinder.getRangeInches());
+
+      if(m_rangeFinder.getRangeInches() >= 3){
         ledStrip.setSolidHSV(0, 255, 255);
       }
       else{

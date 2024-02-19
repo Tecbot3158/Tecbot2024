@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.RampAction;
+import frc.robot.commands.Sequence1;
 import frc.robot.commands.OffL;
 /*import frc.robot.commands.S1F;
 import frc.robot.commands.S2F;
@@ -35,11 +36,10 @@ public class OI {
     public void configureButtonBindings(){
         //pilot.whileTrue(ButtonType.A, new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.1));
         // pilot.whileHeld(ButtonType.B, new RampAction(robotContainer.getRampSubsystem(), 0.4, 0.4, 0.1));
-        pilot.a().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.5)  );
-        pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.1, -0.28, 0)  );
-        pilot.x().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.1, -0.28, 0)  );
-        pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.1, -0.28, 0)  );
-        
+        pilot.a().whileTrue( new Sequence1());
+        pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.09, -0.29, 0)  );
+        pilot.x().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.1, -0.1, 0)  );
+        pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.6, -1, 0)  );
         /*pilot.whenPressed(ButtonType.LB, new S3F());
         pilot.whenPressed(ButtonType.POV_UP, new S3B());*/
       

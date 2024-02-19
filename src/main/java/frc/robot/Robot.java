@@ -4,9 +4,12 @@
 
 package frc.robot;
 
+import org.ejml.equation.Sequence;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Sequence1;
 import frc.robot.resources.TecbotPWMLEDStrip;
 
 public class Robot extends TimedRobot {
@@ -54,6 +57,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    Sequence1 a1 = new Sequence1();
+
+    a1.schedule();
   }
 
   @Override
@@ -73,7 +80,6 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     /*Robot.getRobotContainer().getClimber().onR();
     Robot.getRobotContainer().getClimber().onL();*/
-
     Robot.getRobotContainer().getRampSensorSubsystem().setNoteSensor(true);
   }
 
