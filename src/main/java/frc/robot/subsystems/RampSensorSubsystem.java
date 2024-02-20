@@ -15,6 +15,7 @@ public class RampSensorSubsystem extends SubsystemBase {
         
         ledStrip = new TecbotPWMLEDStrip(0, 20);
         m_rangeFinder = new Ultrasonic(0, 1);
+        m_rangeFinder.setAutomaticMode(true);
     }
         
     public void setNoteSensor(boolean doStart){
