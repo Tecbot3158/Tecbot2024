@@ -12,14 +12,13 @@ import frc.robot.Robot;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Sequence1 extends SequentialCommandGroup {
+public class Sequence2 extends SequentialCommandGroup {
   /** Creates a new AutonomousRoute. */
   
 
-  public Sequence1() {
+  public Sequence2() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(),0.6, -1, 0, 1), new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(), .6, -1, 0.5, 10));
+    addCommands(new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(),0.08, -0.31, 0, 1), new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(), .08, -0.31, 0.5, 10));
   }
-
 }
