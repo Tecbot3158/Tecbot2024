@@ -1,5 +1,4 @@
 package frc.robot.subsystems;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
@@ -9,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.resources.TecbotSpeedController;
-import frc.robot.resources.TecbotController.TypeOfController;
 import frc.robot.resources.TecbotSpeedController.TypeOfMotor;
 
 

@@ -1,9 +1,9 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class OffL extends CommandBase {
+public class OffL extends Command {
   /** Creates a new IntakeOn. */
   public OffL() {
     // Use addRequirements() here to declare subsystem dependencies.

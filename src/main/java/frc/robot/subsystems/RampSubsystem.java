@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.resources.TecbotSpeedController;
-import frc.robot.resources.TecbotController.TypeOfController;
 import frc.robot.resources.TecbotSpeedController.TypeOfMotor;
 
 
