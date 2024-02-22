@@ -30,7 +30,7 @@ public class Climber extends SubsystemBase {
     @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(xbox != null){
+    /*if(xbox != null){
       double axisLeft = xbox.getLeftTriggerAxis();
       double axisRight = xbox.getRightTriggerAxis();
       cmL.set(axisLeft * .1);
@@ -53,6 +53,7 @@ public class Climber extends SubsystemBase {
 
     SmartDashboard.putNumber("Climber/LeftEncoder Velocity", cmL.getCANSparkMax().getEncoder().getVelocity());
     SmartDashboard.putNumber("Climber/RightEncoder Velocity", cmR.getCANSparkMax().getEncoder().getVelocity());
+    */
   }
 
   /*public void onL(){

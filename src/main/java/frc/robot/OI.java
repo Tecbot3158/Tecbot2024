@@ -22,7 +22,7 @@ import frc.robot.resources.TecbotConstants;
 
 public class OI {
     public static OI instance;
-    private CommandXboxController pilot;
+    private CommandXboxController pilot, mañanitas;
     public RobotContainer robotContainer;
 
     public OI(RobotContainer rc, CommandXboxController c1){
@@ -30,13 +30,12 @@ public class OI {
         robotContainer = rc;
     }
 
-
     public void configureButtonBindings(){
         //pilot.whileTrue(ButtonType.A, new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.1));
         // pilot.whileHeld(ButtonType.B, new RampAction(robotContainer.getRampSubsystem(), 0.4, 0.4, 0.1));
-        pilot.a().whileTrue( new Sequence1());
-        pilot.x().whileTrue( new Sequence2());
-        pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0., 0, 0.5)  );
+        pilot.rightBumper().whileTrue( new Sequence1());
+        pilot.a().whileTrue( new Sequence2());
+        pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(),-0.3, 0.3, 0.0)  );
         pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.6, -1, 0)  );
         /*pilot.whenPressed(ButtonType.LB, new S3F());
         pilot.whenPressed(ButtonType.POV_UP, new S3B());*/

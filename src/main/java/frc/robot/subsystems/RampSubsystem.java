@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,6 +17,7 @@ import frc.robot.resources.TecbotSpeedController.TypeOfMotor;
 
 public class RampSubsystem extends SubsystemBase {
   TecbotSpeedController sm1, sm2, im1;
+  XboxController xbox;
 
   public RampSubsystem(){
    sm1 = new TecbotSpeedController(RobotMap.shooterPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
@@ -23,15 +25,21 @@ public class RampSubsystem extends SubsystemBase {
 
    im1 = new TecbotSpeedController(RobotMap.intakePort[0], TypeOfMotor.VICTOR_SPX);
 
+   xbox = new XboxController(0);
+
    sm1.getCANSparkMax().setIdleMode(IdleMode.kCoast);
    sm2.getCANSparkMax().setIdleMode(IdleMode.kCoast);
 
+
   }
-      
+    
 
     @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    im1.set(xbox.getRightTriggerAxis()-xbox.getLeftTriggerAxis());
+
+
     SmartDashboard.putNumber("Top Position", sm1.getCANSparkMax().getEncoder().getPosition());
     SmartDashboard.putNumber("Bottom Position", sm2.getCANSparkMax().getEncoder().getPosition());
 
@@ -48,5 +56,6 @@ public class RampSubsystem extends SubsystemBase {
     sm2.set(-sBottomSpeed);
     im1.set(intakeSeed);
   }
+
 }
 
