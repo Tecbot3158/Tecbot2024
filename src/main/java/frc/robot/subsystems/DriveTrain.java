@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.MkSwerveModuleBuilder;
 import com.swervedrivespecialties.swervelib.MotorType;
@@ -19,13 +18,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -83,7 +79,7 @@ public class DriveTrain extends SubsystemBase {
   // Fixed FIXME Uncomment if you are using a NavX
   private final static AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
-  public static SwerveDriveOdometry odometer;
+  public SwerveDriveOdometry odometer;
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule m_frontLeftModule;
   private final SwerveModule m_frontRightModule;
@@ -185,7 +181,17 @@ public class DriveTrain extends SubsystemBase {
       m_navx.zeroYaw();
   }
 
-  public static Rotation2d getGyroscopeRotation() {
+  public void resetPosition(){
+    odometer.resetPosition(getGyroscopeRotation(),
+    new SwerveModulePosition[]{ 
+      m_frontLeftModule.getPosition(),
+      m_frontRightModule.getPosition(),
+      m_backLeftModule.getPosition(),
+      m_backRightModule.getPosition()},
+      getPose2d());
+  }
+
+  public Rotation2d getGyroscopeRotation() {
     
     if (m_navx.isMagnetometerCalibrated()) {
       // We will only get valid fused headings if the magnetometer is calibrated
