@@ -37,6 +37,8 @@ public class RobotContainer {
 
   private final  CommandXboxController m_controller = new CommandXboxController(0);
 
+  private final CommandXboxController m_controller2 = new CommandXboxController(1);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -68,6 +70,10 @@ public class RobotContainer {
 
     return m_controller;
 
+  }
+
+  public CommandXboxController getCopilot(){
+    return m_controller2;
   }
 
  /*public Climber getClimber(){
