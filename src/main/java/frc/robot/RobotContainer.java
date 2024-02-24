@@ -63,6 +63,11 @@ public class RobotContainer {
     // Configure the button bindings
   }
 
+  public DriveTrain getDriveTrain(){
+
+      return m_drivetrainSubsystem;
+
+  }
 
   public CommandXboxController getPilot(){
 

@@ -10,15 +10,20 @@ import com.swervedrivespecialties.swervelib.MkSwerveModuleBuilder;
 import com.swervedrivespecialties.swervelib.MotorType;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -78,6 +83,8 @@ public class DriveTrain extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+  public static SwerveDriveOdometry odometer;
+  
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
@@ -151,6 +158,16 @@ public class DriveTrain extends SubsystemBase {
                 .withSteerEncoderPort(Constants.BACK_RIGHT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.BACK_RIGHT_MODULE_STEER_OFFSET)
                 .build();
+
+
+    odometer = new SwerveDriveOdometry(m_kinematics, getGyroscopeRotation(),
+                new SwerveModulePosition[]{ 
+                  m_frontLeftModule.getPosition(),
+                  m_frontRightModule.getPosition(),
+                  m_backLeftModule.getPosition(),
+                  m_backRightModule.getPosition()
+                }
+              );
   }
 
   /**
@@ -176,8 +193,16 @@ public class DriveTrain extends SubsystemBase {
     m_chassisSpeeds = chassisSpeeds;
   }
 
+
+  public Pose2d getPose2d(){
+    return odometer.getPoseMeters();
+  }
+
+
   @Override
   public void periodic() {
+
+    //System.out.println("Chassis speeds " + m_chassisSpeeds );
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
@@ -185,5 +210,19 @@ public class DriveTrain extends SubsystemBase {
     m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
     m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
     m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+
+
+    SwerveModulePosition positions[] = new SwerveModulePosition[4];
+    positions[0] = m_frontLeftModule.getPosition();
+    positions[1] = m_frontRightModule.getPosition();
+    positions[2] = m_backLeftModule.getPosition();
+    positions[3] = m_backRightModule.getPosition();
+    
+    odometer.update(getGyroscopeRotation(),positions);
+    double PositionX = odometer.getPoseMeters().getX();
+    double PositionY = odometer.getPoseMeters().getY();
+    SmartDashboard.putNumber("X", PositionX);
+    SmartDashboard.putNumber("Y", PositionY);
+
   }
 }

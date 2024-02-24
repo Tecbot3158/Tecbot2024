@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Robot;
+import frc.robot.subsystems.RampSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -16,10 +17,10 @@ public class Sequence1 extends SequentialCommandGroup {
   /** Creates a new AutonomousRoute. */
   
 
-  public Sequence1() {
+  public Sequence1(RampSubsystem ramp, double ta, double tb) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(),0.6, -1, 0, 1), new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(), .6, -1, 0.5, 10));
+    addCommands(new RampActionEternal(ramp,0.6, -1, 0, ta), new RampActionEternal(ramp, .6, -1, 0.5, tb));
   }
 
 }

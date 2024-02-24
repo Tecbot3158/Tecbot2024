@@ -9,6 +9,8 @@ import org.ejml.equation.Sequence;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoDriveAndShoot;
+import frc.robot.commands.AutoDriveToPosition;
 import frc.robot.commands.Sequence1;
 import frc.robot.resources.TecbotPWMLEDStrip;
 
@@ -52,15 +54,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // recuerda que X es para adelante y está al reves ... el adelante es del roborio a la pila
+    //m_autonomousCommand = new AutoDriveToPosition(m_robotContainer.getDriveTrain() , 0, 0,-1,0,0,90);
+    
+    m_autonomousCommand = new AutoDriveAndShoot(m_robotContainer.getDriveTrain(), m_robotContainer.getRampSubsystem() );
+
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-    Sequence1 a1 = new Sequence1();
-
-    a1.schedule();
   }
 
   @Override

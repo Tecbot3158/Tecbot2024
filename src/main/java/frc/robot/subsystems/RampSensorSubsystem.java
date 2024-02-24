@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,7 +18,7 @@ public class RampSensorSubsystem extends SubsystemBase {
         
         ledStrip = new TecbotPWMLEDStrip(0, 20);
         m_rangeFinder = new Ultrasonic(0, 1);
-        m_rangeFinder.setAutomaticMode(true);
+        Ultrasonic.setAutomaticMode(true);
     }
         
     public void setNoteSensor(boolean doStart){
@@ -25,18 +28,34 @@ public class RampSensorSubsystem extends SubsystemBase {
       @Override
     public void periodic() {
       // This method will be called once per scheduler run
+      // TODO: ERASE THIS LINE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      doSense = false;
       if(doSense == true){
       
-      SmartDashboard.putBoolean("Ultrasonic", m_rangeFinder.isEnabled());
-      SmartDashboard.putBoolean("Ultrasonic a", m_rangeFinder.isRangeValid());
-      SmartDashboard.putNumber("Ultrasonic range", m_rangeFinder.getRangeInches());
+        SmartDashboard.putBoolean("Ultrasonic", m_rangeFinder.isEnabled());
+        SmartDashboard.putBoolean("Ultrasonic a", m_rangeFinder.isRangeValid());
+        SmartDashboard.putNumber("Ultrasonic range", m_rangeFinder.getRangeInches());
 
-      if(m_rangeFinder.getRangeInches() >= 3){
-        ledStrip.setSolidHSV(0, 255, 255);
+
+        SmartDashboard.putNumber("Ultrasonic range", m_rangeFinder.getRangeInches());
+
+        if(m_rangeFinder.getRangeInches() >= 3){
+          ledStrip.setSolidHSV(0, 255, 255);
+        }
+        else{
+          ledStrip.setSolidHSV(90, 255, 255);
+        }
       }
-      else{
-        ledStrip.setSolidHSV(90, 255, 255);
-      }
-      }
+
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry camerapose_targetspace = table.getEntry("camerapose_targetspace");
+    
+    Double values[] = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0};
+    values = camerapose_targetspace.getDoubleArray(values);
+
+    SmartDashboard.putNumber("CAMERA X ", values[0]);
+    SmartDashboard.putNumber("CAMERA Z ", values[2]);
+
+
     }
 }
