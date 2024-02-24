@@ -34,8 +34,8 @@ public class OI {
     public void configureButtonBindings(){
         //pilot.whileTrue(ButtonType.A, new RampAction(robotContainer.getRampSubsystem(), 0, 0, 0.1));
         // pilot.whileHeld(ButtonType.B, new RampAction(robotContainer.getRampSubsystem(), 0.4, 0.4, 0.1));
-        pilot.rightBumper().whileTrue( new Sequence1());
-        pilot.leftBumper().whileTrue( new Sequence2());
+        pilot.rightBumper().whileTrue( new Sequence1(robotContainer.getRampSubsystem(), 0.8, 10 ));
+        pilot.leftBumper().whileTrue( new Sequence2(robotContainer.getRampSubsystem(), 1, 10));
         pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(),-0.3, 0.3, 0.0)  );
         pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.6, -1, 0)  );
 

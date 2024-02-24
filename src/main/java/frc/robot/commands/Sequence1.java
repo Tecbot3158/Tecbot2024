@@ -20,7 +20,7 @@ public class Sequence1 extends SequentialCommandGroup {
   public Sequence1(RampSubsystem ramp, double ta, double tb) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(),0.6, -1, 0, .8), new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(), .6, -1, 0.5, 10));
+    addCommands(new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(),0.6, -1, 0, ta), new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(), .6, -1, 0.5, tb));
   }
 
 }
