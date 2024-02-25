@@ -224,5 +224,7 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("X", PositionX);
     SmartDashboard.putNumber("Y", PositionY);
 
+    SmartDashboard.putNumber("Navx", m_navx.getAngle());
+
   }
 }

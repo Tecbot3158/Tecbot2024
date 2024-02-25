@@ -10,8 +10,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.RampSubsystem;
 
-public class AutoDriveToPosition extends Command {
+public class AutoDriveToPositionWhileRolling extends Command {
   /** Creates a new AutoDriveToPosition. */
   double initialX;
   double finalX;
@@ -25,15 +26,20 @@ public class AutoDriveToPosition extends Command {
   double totalMagnitude;
   double currentMagnitude;
 
+  double rollingInitOnMoveCompletion;
+  double rollingSpeed;
   double speedMultiplier;
 
   DriveTrain driveTrain;
+  RampSubsystem rampSubsystem;
 
-  public AutoDriveToPosition(DriveTrain dt, double xi, double yi, double xf, double yf, double ri , double rf, double sm){
+
+  public AutoDriveToPositionWhileRolling(DriveTrain dt,RampSubsystem rp, double xi, double yi, double xf, double yf, double ri , double rf, double rm, double rs, double sm) {
     // Use addRequirements() here to declare subsystem dependencies.
     
-    addRequirements(dt);
+    addRequirements(dt, rp);
     driveTrain = dt;
+    rampSubsystem = rp;
    initialX = xi;
    finalX = xf;
 
@@ -42,6 +48,9 @@ public class AutoDriveToPosition extends Command {
 
    initialR =ri;
    finalR = rf;
+  
+   rollingInitOnMoveCompletion = rm;
+   rollingSpeed = rs;
    speedMultiplier = sm;
   }
 
@@ -90,6 +99,10 @@ public class AutoDriveToPosition extends Command {
       advance = Math.max(0.2,advance); // minimum advance
     }
 
+    if(advance < rollingInitOnMoveCompletion){
+      rampSubsystem.getRamp(0, 0, rollingSpeed);
+    }
+
 
     System.out.println("Vx : " + tr.getX()*advance );
     System.out.println("Vy : " + tr.getY()*advance );
@@ -101,7 +114,7 @@ public class AutoDriveToPosition extends Command {
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         tr.getX()*advance*speedMultiplier,
                         tr.getY()*advance*speedMultiplier,
-                        corr*.0015,
+                        corr*0.0015,
                         driveTrain.getGyroscopeRotation()
                 )
         );

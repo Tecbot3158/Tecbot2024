@@ -14,6 +14,7 @@ import frc.robot.commands.S2F;
 import frc.robot.commands.S3F;*/
 import frc.robot.commands.OnL;
 import frc.robot.commands.StopMotor;
+import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.RampAction;
 /*import frc.robot.commands.S1B;
 import frc.robot.commands.S2B;
@@ -38,6 +39,7 @@ public class OI {
         pilot.leftBumper().whileTrue( new Sequence2(robotContainer.getRampSubsystem(), 1, 10));
         pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(),-0.3, 0.3, 0.0)  );
         pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.6, -1, 0)  );
+        pilot.button(6).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
 
         copilot.a().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0));
         copilot.b().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .08, -.31, 0));
