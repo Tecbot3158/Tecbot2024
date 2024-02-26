@@ -31,8 +31,12 @@ import frc.robot.subsystems.RampSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_drivetrainSubsystem = new DriveTrain();
+
   //private final Climber climber;
   private final RampSubsystem rampSubsystem;
+  private final Climber climber;
+
+
   private final RampSensorSubsystem rampSensorSubsystem;
 
   private final  CommandXboxController m_controller = new CommandXboxController(0);
@@ -51,7 +55,9 @@ public class RobotContainer {
     // Right stick X axis -> rotation
 
     //climber = new Climber();
-    rampSubsystem = new RampSubsystem();
+    rampSubsystem = new RampSubsystem(this);
+    climber = new Climber(this);
+
     rampSensorSubsystem = new RampSensorSubsystem();
     //climber.setController(m_controller.getHID() );
     

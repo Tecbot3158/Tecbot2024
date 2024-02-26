@@ -67,7 +67,6 @@ public class AutoDriveToPosition extends Command {
     SmartDashboard.putNumber("Sx", dx);
     SmartDashboard.putNumber("Sy", dy);
 
-
     Translation2d tr = new Translation2d(dx, dy);
     double advance = tr.getNorm()/totalMagnitude;
     

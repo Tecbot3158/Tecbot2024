@@ -19,9 +19,10 @@ public class RampSensorSubsystem extends SubsystemBase {
     public RampSensorSubsystem(){
         
         ledStrip = new TecbotPWMLEDStrip(0, 20);
+
         m_rangeFinder = new Ultrasonic(0, 1);
         ultrasonicThread = new UltrasonicThread(m_rangeFinder);
-        Ultrasonic.setAutomaticMode(true);
+        m_rangeFinder.setAutomaticMode(true);
         ultrasonicThread.start();
   
     }
