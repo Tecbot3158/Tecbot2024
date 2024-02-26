@@ -53,17 +53,22 @@ public class Climber extends SubsystemBase {
     if( cmR.getEncPosition() <= (rightEncoderZeroValue - 18) && climberSpeedR < 0){
       climberSpeedR = 0;
     }
+
+    /* 
     if( cmR.getEncPosition() >= -2 && climberSpeedR > 0){
       climberSpeedR = 0;
-    }
+    }}*/
     
 
     if( (cmL.getEncPosition() >= leftEncoderZeroValue + 18) && climberSpeedL > 0){
       climberSpeedL = 0;
     }
+
+    /*
     if( (cmL.getEncPosition() <= 1) && climberSpeedL < 0){
       climberSpeedL = 0;
     }
+     */
     
     cmR.set( climberSpeedR);
     cmL.set( climberSpeedL);
