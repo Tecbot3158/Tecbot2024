@@ -36,7 +36,7 @@ public class AutoDriveAndShoot extends SequentialCommandGroup {
     );
     */
 
-    /* 
+    
     addCommands(
     new AutoDriveToPosition(driveTrain , 0, 0,.40,0,0,0, 1.7),
     new Sequence1( ramp, 0.50 , 0.65),
@@ -51,10 +51,10 @@ public class AutoDriveAndShoot extends SequentialCommandGroup {
     new Sequence1( ramp, 0.70 , 1.0),
     new ZeroRamp(ramp)
     );
-    */
-
-
     
+
+
+    /* 
     addCommands(
     new AutoDriveToPosition(driveTrain , 0, 0,.40,0,0,0, 1.7),
     new Sequence1( ramp, 0.50 , 0.65),
@@ -69,6 +69,7 @@ public class AutoDriveAndShoot extends SequentialCommandGroup {
     new Sequence1( ramp, 0.70 , 1.0),
     new ZeroRamp(ramp)
     );
+    */
     
   }
 }
