@@ -4,29 +4,50 @@
 
 package frc.robot;
 
+import org.ejml.equation.Sequence;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoDriveAndShoot;
+import frc.robot.commands.AutoDriveToPosition;
+import frc.robot.commands.Sequence1;
+import frc.robot.resources.TecbotPWMLEDStrip;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private static RobotContainer m_robotContainer;
+  private OI m_oi;
+
+  private TecbotPWMLEDStrip ledStrip;
+
+  private int i = 0;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    m_oi = new OI(m_robotContainer , m_robotContainer.getPilot(), m_robotContainer.getCopilot());
+    m_oi.configureButtonBindings();
+  
+  }
+  
+  public static RobotContainer getRobotContainer(){
+    return m_robotContainer;
   }
 
-  public static RobotContainer getRobotContainer() {
-  
-    return m_robotContainer;
-  
-  }
-  
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    //ledStrip.setSolidHSV(69, 255, 255);
   }
 
   @Override
@@ -40,7 +61,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // recuerda que X es para adelante y está al reves ... el adelante es del roborio a la pila
+    //m_autonomousCommand = new AutoDriveToPosition(m_robotContainer.getDriveTrain() , 0, 0,-1,0,0,90);
+    
+    m_autonomousCommand = new AutoDriveAndShoot(m_robotContainer.getDriveTrain(), m_robotContainer.getRampSubsystem() );
+
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -61,7 +87,11 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    /*Robot.getRobotContainer().getClimber().onR();
+    Robot.getRobotContainer().getClimber().onL();*/
+    Robot.getRobotContainer().getRampSensorSubsystem().setNoteSensor(true);
+  }
 
   @Override
   public void teleopExit() {}
