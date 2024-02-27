@@ -22,7 +22,7 @@ public class RampSensorSubsystem extends SubsystemBase {
 
         m_rangeFinder = new Ultrasonic(0, 1);
         ultrasonicThread = new UltrasonicThread(m_rangeFinder);
-        m_rangeFinder.setAutomaticMode(true);
+        Ultrasonic.setAutomaticMode(true);
         ultrasonicThread.start();
   
     }
@@ -34,6 +34,7 @@ public class RampSensorSubsystem extends SubsystemBase {
       @Override
     public void periodic() {
       // This method will be called once per scheduler run
+      doSense = false;
       if(doSense == true){
       
         SmartDashboard.putBoolean("Ultrasonic", m_rangeFinder.isEnabled());

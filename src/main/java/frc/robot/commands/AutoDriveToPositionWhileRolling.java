@@ -34,7 +34,8 @@ public class AutoDriveToPositionWhileRolling extends Command {
   RampSubsystem rampSubsystem;
 
 
-  public AutoDriveToPositionWhileRolling(DriveTrain dt,RampSubsystem rp, double xi, double yi, double xf, double yf, double ri , double rf, double rm, double rs, double sm) {
+  public AutoDriveToPositionWhileRolling(DriveTrain dt,RampSubsystem rp, double xi, double yi, double xf, double yf, 
+  double ri , double rf, double rm, double rs, double sm) {
     // Use addRequirements() here to declare subsystem dependencies.
     
     addRequirements(dt, rp);
@@ -85,36 +86,50 @@ public class AutoDriveToPositionWhileRolling extends Command {
     
     // determine magnitude from current por to final pos
     
-    System.out.println(currentMagnitude);
+    //System.out.println(currentMagnitude);
     SmartDashboard.putNumber("CurrentMagnitude", currentMagnitude);
 
-    System.out.println(totalMagnitude);
+    //System.out.println(totalMagnitude);
     
-    System.out.println("Advance : " + advance);
+    //System.out.println("Advance : " + advance);
     // determine percentage. 
-    
+    SmartDashboard.putNumber("Advance!!", advance);
+    SmartDashboard.putNumber("Picking on!!", rollingInitOnMoveCompletion);
+
+
+     if(advance < rollingInitOnMoveCompletion){
+      //System.out.println("*****************************************");
+      rampSubsystem.getRamp(0, 0, rollingSpeed);
+    }
+
     if( advance > 0.05){
-      advance = 1; // is a percentual control. 
+
+      //advance = 1; // is a percentual control. 
+      if( advance< 0.9 )
+        advance = 0.5;
+      else
+        advance = 0.9;
+      
+    
     }else{
       advance = Math.max(0.2,advance); // minimum advance
     }
 
-    if(advance < rollingInitOnMoveCompletion){
-      rampSubsystem.getRamp(0, 0, rollingSpeed);
-    }
+
+   
 
 
-    System.out.println("Vx : " + tr.getX()*advance );
-    System.out.println("Vy : " + tr.getY()*advance );
+    //System.out.println("Vx : " + tr.getX()*advance );
+    //System.out.println("Vy : " + tr.getY()*advance );
 
     double corr = (0 - driveTrain.getGyroscopeRotation().getDegrees())/20;
     
-
+    //corr*0.0015
     driveTrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         tr.getX()*advance*speedMultiplier,
                         tr.getY()*advance*speedMultiplier,
-                        corr*0.0015,
+                        0,
                         driveTrain.getGyroscopeRotation()
                 )
         );
@@ -127,6 +142,7 @@ public class AutoDriveToPositionWhileRolling extends Command {
   @Override
   public void end(boolean interrupted) {
 
+    rampSubsystem.getRamp(0, 0, 0);
       driveTrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         0,
@@ -145,6 +161,6 @@ public class AutoDriveToPositionWhileRolling extends Command {
   @Override
   public boolean isFinished() {
 
-    return currentMagnitude < 0.01  ; // not percentage but cm...
+    return currentMagnitude < 0.05  ; // not percentage but cm...
   }
 }

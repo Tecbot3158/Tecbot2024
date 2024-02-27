@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSubsystem;
 
@@ -17,6 +18,8 @@ public class AutoDriveAndShoot extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     /* 
+
+    firsst 1
     addCommands(
     new AutoDriveToPosition(driveTrain , 0, 0,.60,0,0,0),
     new Sequence1( ramp, 1 , 0.5),
@@ -33,23 +36,41 @@ public class AutoDriveAndShoot extends SequentialCommandGroup {
     );
     */
 
+    /* 
     addCommands(
-    new AutoDriveToPosition(driveTrain , 0, 0,.60,0,0,0, 1.6),
-    new Sequence1( ramp, 1 , 0.5),
-    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 0.6, 0, 2.35, 0, 0, 0, 0.6, 0.6, 1.6),
-    //new AutoDriveToPosition(driveTrain , 0.60, 0,2.35,0,0,0),
-    new RampActionEternal(ramp,0.0, 0, 0.4, 0.2),
-    new RampActionEternal(ramp,0.0, 0, 0.0, 0.1),    
-    new AutoDriveToPosition(driveTrain , 2.35, 0,.60,0,0,0, 1.6),
-    new Sequence1( ramp, 1 , 1.0),
-    new AutoDriveToPosition(driveTrain , 0.60, 0,1.10,1.49,0,0, 1.6),
-    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.10, 1.49, 2.35, 1.49, 0, 0, .4, .6, 1.6),
-   // new AutoDriveToPosition(driveTrain , 1.20, 1.65,2.30,1.25,0,0),
-    new RampActionEternal(ramp,0.0, 0, 0.3, 0.25),
-    new RampActionEternal(ramp,0.0, 0, 0.0, 0.1),
-    new AutoDriveToPosition(driveTrain , 2.35, 1.49
-    ,0.60,0.0,0,0, 1.6),
-    new Sequence1( ramp, 1 , 1.0)
+    new AutoDriveToPosition(driveTrain , 0, 0,.40,0,0,0, 1.7),
+    new Sequence1( ramp, 0.50 , 0.65),
+    new ZeroRamp(ramp),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 0.4, 0, 2.00, 0, 0, 0, 0.30, 0.40, 1.6),
+    new AutoDriveToPosition(driveTrain , 2.00, 0,.40,0,0,0, 1.7),
+    new Sequence1( ramp, 0.40 , 0.70),
+    new ZeroRamp(ramp),
+    new AutoDriveToPosition(driveTrain , 0.40, 0,1.00,1.55,0,0, 1.7),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.00, 1.55, 2.00, 1.55, 0, 0, .25, .40, 1.6),
+    new AutoDriveToPosition(driveTrain , 2.00, 1.55,0.30,0.0,0,0, 1.7),
+    new Sequence1( ramp, 0.70 , 1.0),
+    new ZeroRamp(ramp)
     );
+    */
+
+
+    
+    addCommands(
+    new AutoDriveToPosition(driveTrain , 0, 0,.40,0,0,0, 1.7),
+    new Sequence1( ramp, 0.50 , 0.65),
+    new ZeroRamp(ramp),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 0.4, 0, 2.00, 0, 0, 0, 0.30, 0.40, 1.6),
+    new AutoDriveToPosition(driveTrain , 2.00, 0,.40,0,0,0, 1.7),
+    new Sequence1( ramp, 0.40 , 0.70),
+    new ZeroRamp(ramp),
+    new AutoDriveToPosition(driveTrain , 0.40, 0,1.00,-1.55,0,0, 1.7),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.00, -1.55, 2.00, -1.55, 0, 0, .25, .40, 1.6),
+    new AutoDriveToPosition(driveTrain , 2.00, -1.55,0.30,0.0,0,0, 1.7),
+    new Sequence1( ramp, 0.70 , 1.0),
+    new ZeroRamp(ramp)
+    );
+    
   }
 }
+
+

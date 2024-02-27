@@ -4,6 +4,7 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -38,8 +39,12 @@ public class RampSubsystem extends SubsystemBase {
     @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    im1.set(Math.min(1,robotContainer.getCopilot().getRightTriggerAxis() + robotContainer.getPilot().getRightTriggerAxis())-Math.min(1,robotContainer.getPilot().getLeftTriggerAxis() + robotContainer.getCopilot().getLeftTriggerAxis()));
 
+    SmartDashboard.putBoolean("Is Auto", DriverStation.isAutonomous() );
+    if(!DriverStation.isAutonomous()){
+      im1.set(Math.min(1,robotContainer.getCopilot().getRightTriggerAxis() + robotContainer.getPilot().getRightTriggerAxis())-Math.min(1,robotContainer.getPilot().getLeftTriggerAxis() + robotContainer.getCopilot().getLeftTriggerAxis()));
+    }
+      
 
     SmartDashboard.putNumber("Top Position", sm1.getCANSparkMax().getEncoder().getPosition());
     SmartDashboard.putNumber("Bottom Position", sm2.getCANSparkMax().getEncoder().getPosition());
