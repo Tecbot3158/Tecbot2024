@@ -170,10 +170,9 @@ out/
 
 # Simulation GUI and other tools window save file
 *-window.json
-gradlew
-gradlew.bat
-vendordeps/SdsSwerveLib.json
-vendordeps/REVLib.json
-.vscode/launch.json
-.vscode/settings.json
-.wpilib/wpilib_preferences.json
+
+# Simulation data log directory
+logs/
+
+# Folder that has CTRE Phoenix Sim device config storage
+ctre_sim/

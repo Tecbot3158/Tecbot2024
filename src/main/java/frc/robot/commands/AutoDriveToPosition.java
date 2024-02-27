@@ -67,7 +67,6 @@ public class AutoDriveToPosition extends Command {
     SmartDashboard.putNumber("Sx", dx);
     SmartDashboard.putNumber("Sy", dy);
 
-
     Translation2d tr = new Translation2d(dx, dy);
     double advance = tr.getNorm()/totalMagnitude;
     
@@ -85,7 +84,14 @@ public class AutoDriveToPosition extends Command {
     // determine percentage. 
     
     if( advance > 0.05){
-      advance = 1; // is a percentual control. 
+
+      //advance = 1; // is a percentual control. 
+      if( advance< 0.9 )
+        advance = 0.5;
+      else
+        advance = 0.9;
+      
+    
     }else{
       advance = Math.max(0.2,advance); // minimum advance
     }
@@ -132,6 +138,6 @@ public class AutoDriveToPosition extends Command {
   @Override
   public boolean isFinished() {
 
-    return currentMagnitude < 0.01  ; // not percentage but cm...
+    return currentMagnitude < 0.05  ; // not percentage but cm...
   }
 }

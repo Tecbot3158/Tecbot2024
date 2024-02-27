@@ -13,11 +13,13 @@ public class AutoDriveShootAndMid extends SequentialCommandGroup {
     addCommands(
     new AutoDriveToPosition(driveTrain , 0, 0,.60,0,0,0,1.6),
     new Sequence1( ramp, 1 , 0.5),
+    new ZeroRamp(ramp),
     new AutoDriveToPositionWhileRolling(driveTrain, ramp , 0.60, 0, 2.30, 0, 0, 0, 0.6, 0.6, 1.6),
     new RampActionEternal(ramp,0.0, 0, 0.3, 0.25),
     new RampActionEternal(ramp,0.0, 0, 0.0, 0.1),    
     new AutoDriveToPosition(driveTrain , 2.30, 0,.60,0,0,0,1.6),
     new Sequence1( ramp, 1 , 1.0),
+    new ZeroRamp(ramp),
     new AutoDriveToPosition(driveTrain , 0.60, 0,5.0,0.63,0,0,1.60),
     new AutoDriveToPosition(driveTrain , 5.0, 1.6,8.0,0.63,0,0,1.6),
     new RampActionEternal(ramp,0.0, 0, 0.3, 0.25),

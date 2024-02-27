@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Math {
 
     public static final double PI = 3.141592653589793238462643383279502884197;
-    public static double[] coordenadas;
 
     /**
      * @param p  input to clamp

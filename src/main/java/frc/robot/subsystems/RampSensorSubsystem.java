@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -16,14 +17,16 @@ public class RampSensorSubsystem extends SubsystemBase {
 
        private boolean doSense;
   
+      LinearFilter filter;
     public RampSensorSubsystem(){
         
-        ledStrip = new TecbotPWMLEDStrip(0, 20);
+        ledStrip = new TecbotPWMLEDStrip(9, 36);
+
         m_rangeFinder = new Ultrasonic(0, 1);
         ultrasonicThread = new UltrasonicThread(m_rangeFinder);
         Ultrasonic.setAutomaticMode(true);
         ultrasonicThread.start();
-  
+      filter = LinearFilter.movingAverage(3);
     }
         
     public void setNoteSensor(boolean doStart){
@@ -33,6 +36,7 @@ public class RampSensorSubsystem extends SubsystemBase {
       @Override
     public void periodic() {
       // This method will be called once per scheduler run
+  
       if(doSense == true){
       
         SmartDashboard.putBoolean("Ultrasonic", m_rangeFinder.isEnabled());
@@ -41,13 +45,19 @@ public class RampSensorSubsystem extends SubsystemBase {
 
 
         SmartDashboard.putNumber("Ultrasonic range", m_rangeFinder.getRangeInches());
+        
+        double v = filter.calculate(ultrasonicThread.getDistance());
 
-        if(ultrasonicThread.getDistance() >= 3){
+        if(v <= 7){
           ledStrip.setSolidHSV(0, 255, 255);
         }
-        else{
-          ledStrip.setSolidHSV(90, 255, 255);
+        if(v > 7 && v < 19  ){
+          ledStrip.setSolidHSV(70, 255, 255);
         }
+        if(v > 20 ){
+          ledStrip.setSolidHSV(120, 255, 255);
+        }
+
       }
 
       
