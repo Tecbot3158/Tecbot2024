@@ -7,13 +7,25 @@ package frc.robot;
 import java.util.function.DoubleSupplier;
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AutoDriveAndShoot;
+import frc.robot.commands.AutoDriveAndShootLeftSite;
+import frc.robot.commands.AutoDriveAndShootLeftSiteRed;
+import frc.robot.commands.AutoDriveAndShootRed;
+import frc.robot.commands.AutoDriveAndShootRightSite;
+import frc.robot.commands.AutoDriveAndShootRightSiteRed;
+import frc.robot.commands.AutoDriveShootAndMid;
+import frc.robot.commands.AutoDriveShootAndMidRed;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.Climber;
@@ -43,6 +55,17 @@ public class RobotContainer {
 
   private final CommandXboxController m_controller2 = new CommandXboxController(1);
 
+  public AutoDriveAndShoot AutoDriveShoot;
+  public AutoDriveAndShootRed AutoDriveShootRed;
+  public AutoDriveAndShootLeftSite AutoDriveShootLeftSite;
+  public AutoDriveAndShootLeftSiteRed AutoDriveShootLeftSiteRed;
+  public AutoDriveAndShootRightSite AutoDriveShootRightSite;
+  public AutoDriveAndShootRightSiteRed AutoDriveShootRightSiteRed ;
+  public AutoDriveShootAndMid AutoDriveShootMid;
+  public AutoDriveShootAndMidRed AutoDriveShootMidRed;
+  
+  public SendableChooser<Command> m_auto_chooser;
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -69,6 +92,28 @@ public class RobotContainer {
     m_drivetrainSubsystem.setDefaultCommand(ddc);
 
     // Configure the button bindings
+    AutoDriveShoot = new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootRed = new AutoDriveAndShootRed(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootLeftSite = new AutoDriveAndShootLeftSite(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootLeftSiteRed = new AutoDriveAndShootLeftSiteRed(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootRightSite = new AutoDriveAndShootRightSite(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootRightSiteRed = new AutoDriveAndShootRightSiteRed(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootMid = new AutoDriveShootAndMid(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootMidRed = new AutoDriveShootAndMidRed(m_drivetrainSubsystem, rampSubsystem);
+
+    
+    m_auto_chooser = new SendableChooser<>();
+    
+    m_auto_chooser.setDefaultOption("AutoDriveShoot", new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootRed", new AutoDriveAndShootRed(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootLeftSite", new AutoDriveAndShootLeftSite(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootLeftSiteRed", new AutoDriveAndShootLeftSiteRed(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootRightSite", new AutoDriveAndShootRightSite(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootRightSiteRed", new AutoDriveAndShootRightSiteRed(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootMid", new AutoDriveShootAndMid(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootMidRed", new AutoDriveShootAndMidRed(m_drivetrainSubsystem, rampSubsystem));
+
+    SmartDashboard.putData(m_auto_chooser);
   }
 
   public DriveTrain getDriveTrain(){
@@ -103,10 +148,6 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new InstantCommand();
-  }
 
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {

@@ -15,6 +15,7 @@ import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoDriveAndShoot;
@@ -32,11 +33,14 @@ public class Robot extends TimedRobot {
 
   private int i = 0;
 
+  SendableChooser<Command> m_chooser;
+
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     m_oi = new OI(m_robotContainer , m_robotContainer.getPilot(), m_robotContainer.getCopilot());
     m_oi.configureButtonBindings();
+    m_chooser = m_robotContainer.m_auto_chooser;
   
   }
   
@@ -65,16 +69,18 @@ public class Robot extends TimedRobot {
     // recuerda que X es para adelante y está al reves ... el adelante es del roborio a la pila
     //m_autonomousCommand = new AutoDriveToPosition(m_robotContainer.getDriveTrain() , 0, 0,-1,0,0,90);
     
-    m_autonomousCommand = new AutoDriveAndShoot(m_robotContainer.getDriveTrain(), m_robotContainer.getRampSubsystem() );
-
-
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    CommandScheduler.getInstance().run();
+        m_autonomousCommand = m_chooser.getSelected();
+        // schedule the autonomous command (example)
+        if (m_autonomousCommand != null) {
+            m_autonomousCommand.schedule();
     }
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
   @Override
   public void autonomousExit() {}
