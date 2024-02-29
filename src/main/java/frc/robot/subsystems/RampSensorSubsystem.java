@@ -55,26 +55,28 @@ public class RampSensorSubsystem extends SubsystemBase {
         
         double v = filter.calculate(ultrasonicThread.getDistance());
 
-      if(v <= 7){
-          hue = 0;
-      }else if(v > 7 && v < 19  ){
-          hue = 70  
-      }else{
-        hue = 120;
+        if(v <= 7){
+            hue = 0;
+        }else {
+            if(v > 7 && v < 19  ){
+                hue = 70 ;
+            }else{
+              hue = 120;
+            }
+        }
       }
-  
+
       double matchTime  = DriverStation.getMatchTime();
 
       if( matchTime < 15 &&  matchTime > 12){
         blink(pastMatchTime-matchTime , hue, saturation, value);
       }else{
+        
         if ( !doSense ){
             ledStrip.setSolidHSV(0, 0, 0);
         }else{
           ledStrip.setSolidHSV(hue, saturation, value);
         }
-        
-        
       }
       pastMatchTime = matchTime;
       
