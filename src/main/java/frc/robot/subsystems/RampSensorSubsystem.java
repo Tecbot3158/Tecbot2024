@@ -25,7 +25,7 @@ public class RampSensorSubsystem extends SubsystemBase {
       private double pastMatchTime = 0;
     public RampSensorSubsystem(){
         
-        ledStrip = new TecbotPWMLEDStrip(9, 36);
+        //ledStrip = new TecbotPWMLEDStrip(9, 44);
 
         m_rangeFinder = new Ultrasonic(0, 1);
         ultrasonicThread = new UltrasonicThread(m_rangeFinder);
@@ -57,6 +57,8 @@ public class RampSensorSubsystem extends SubsystemBase {
 
         if(v <= 7){
             hue = 0;
+            saturation = 0;
+            value = 0;
         }else {
             if(v > 7 && v < 19  ){
                 hue = 70 ;
@@ -69,18 +71,18 @@ public class RampSensorSubsystem extends SubsystemBase {
       double matchTime  = DriverStation.getMatchTime();
 
       if( matchTime < 15 &&  matchTime > 12){
-        blink(pastMatchTime-matchTime , hue, saturation, value);
+       // blink(pastMatchTime-matchTime , hue, saturation, value);
       }else{
         
         if ( !doSense ){
-            ledStrip.setSolidHSV(0, 0, 0);
+           // ledStrip.setSolidHSV(0, 0, 0);
         }else{
-          ledStrip.setSolidHSV(hue, saturation, value);
+          //ledStrip.setSolidHSV(hue, saturation, value);
         }
       }
       pastMatchTime = matchTime;
       
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    /*NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry camerapose_targetspace = table.getEntry("camerapose_targetspace");
     
     Double values[] = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0};
@@ -89,7 +91,7 @@ public class RampSensorSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CAMERA X ", values[0]);
     SmartDashboard.putNumber("CAMERA Z ", values[2]);
     SmartDashboard.putNumber("Match time ", matchTime);
-
+*/
 
     }
 
@@ -120,5 +122,9 @@ public class RampSensorSubsystem extends SubsystemBase {
       }
      
 
+    }
+
+    public void turnOffLEDs(){
+     // ledStrip.allLedsOff();
     }
 }
