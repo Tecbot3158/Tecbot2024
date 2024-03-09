@@ -52,6 +52,7 @@ public class AutoDriveToPositionWhileRolling extends Command {
   
    rollingInitOnMoveCompletion = rm;
    rollingSpeed = rs;
+   
    speedMultiplier = sm;
   }
 

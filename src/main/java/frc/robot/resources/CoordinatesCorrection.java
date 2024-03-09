@@ -25,7 +25,7 @@ public class CoordinatesCorrection {
         public static double[] transformarCoordenadas( double x, double y, Site site) {
             double[] coordenadas = new double[2];
             switch (site) {
-                case BlueRightSite:
+                case BlueLeftSite:
                     coordenadas[0] = x*Math.cos(AngleBRS2) + y*Math.sin(AngleBRS2);
                     coordenadas[1] = -x*Math.sin(AngleBRS2) + y*Math.cos(AngleBRS2);
                     break;
@@ -33,7 +33,7 @@ public class CoordinatesCorrection {
                     coordenadas[0] = x;
                     coordenadas[1] = y;
                     break;
-                case BlueLeftSite:
+                case BlueRightSite:
                     coordenadas[0] = x*Math.cos(AngleBLS2) + y*Math.sin(AngleBLS2);
                     coordenadas[1] = -x*Math.sin(AngleBLS2) + y*Math.cos(AngleBLS2);
                     break;
@@ -60,7 +60,7 @@ public class CoordinatesCorrection {
         
             // Transformación de coordenadas para cada eje
             for (Site site : Site.values()) {
-                double[] nuevaCoordenada = transformarCoordenadas(-4, 1, site);
+                double[] nuevaCoordenada = transformarCoordenadas(1, 1.3, site);
                 System.out.println( "Site " + site + "  x: " + nuevaCoordenada[0] + "  y: " + nuevaCoordenada[1] );
 
             }
