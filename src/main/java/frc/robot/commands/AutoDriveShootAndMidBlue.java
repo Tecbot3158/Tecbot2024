@@ -4,9 +4,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSubsystem;
 
-public class AutoDriveShootAndMid extends SequentialCommandGroup {
+public class AutoDriveShootAndMidBlue extends SequentialCommandGroup {
 
-    public AutoDriveShootAndMid(DriveTrain driveTrain, RampSubsystem ramp) {
+    public AutoDriveShootAndMidBlue(DriveTrain driveTrain, RampSubsystem ramp) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     

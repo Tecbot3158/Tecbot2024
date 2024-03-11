@@ -18,6 +18,11 @@ public class TecbotPWMLEDStrip {
     // FOR FIRE ANIMATION
     int cooling, sparking, cooldown, heat[];
 
+    int prevH = 0;
+    int prevS = 0;
+    int prevV = 0;
+    
+
     /**
      * Creates a new Addressable LED strip connected through PWM.
      * 
@@ -57,6 +62,8 @@ public class TecbotPWMLEDStrip {
 
     /**
      * Sets a {@link TecbotLEDStrip} to a single solid color.
+     * 
+     * It saves the previous state to avoid the setHSV setting as this has been reported to be a heavy operation. 
      * Please make sure that the parameters are in the following range:
      * 
      * @param hue        The HUE of the color 0-180
@@ -64,6 +71,10 @@ public class TecbotPWMLEDStrip {
      * @param value      The VALUE of the color 0-255
      */
     public void setSolidHSV(int hue, int saturation, int value) {
+
+        if( prevH == hue && prevS == saturation && prevV == value){
+            return;
+        }
 
         hue = (int) Math.clamp(hue, 0, 180);
         saturation = (int) Math.clamp(saturation, 0, 255);
@@ -73,6 +84,9 @@ public class TecbotPWMLEDStrip {
             ledBuffer.setHSV(i, hue, saturation, value);
         }
         led.setData(ledBuffer);
+        prevH = hue;
+        prevS = saturation;
+        prevV = value;
     }
 
     /**

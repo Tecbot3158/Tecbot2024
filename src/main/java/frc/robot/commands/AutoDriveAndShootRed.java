@@ -38,11 +38,11 @@ public class AutoDriveAndShootRed extends SequentialCommandGroup {
     
     addCommands(
     new AutoDriveToPosition(driveTrain , 0, 0,.40,0,0,0, 1.7),
-    new Sequence1( ramp, 0.50 , 0.65),
+    new Sequence1( ramp, 0.50 , 0.90),
     new ZeroRamp(ramp),
     new AutoDriveToPositionWhileRolling(driveTrain, ramp, 0.4, 0, 2.00, 0, 0, 0, 0.30, 0.40, 1.6),
     new AutoDriveToPosition(driveTrain , 2.00, 0,.40,0,0,0, 1.7),
-    new Sequence1( ramp, 0.40 , 0.70),
+    new Sequence1( ramp, 0.40 , 0.90),
     new ZeroRamp(ramp),
     new AutoDriveToPosition(driveTrain , 0.40, 0,1.00,-1.55,0,0, 1.7),
     new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.00, -1.55, 2.00, -1.55, 0, 0, .25, .40, 1.6),

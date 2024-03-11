@@ -20,6 +20,6 @@ public class Sequence2 extends SequentialCommandGroup {
   public Sequence2(RampSubsystem ramp, double ta, double tb) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(),0.08, -0.310, 0, ta), new RampActionEternal(Robot.getRobotContainer().getRampSubsystem(), .08, -0.310, 0.5, tb));
+    addCommands(new RampActionEternal(ramp,0.08, -0.320, 0, ta), new RampActionEternal(ramp, .08, -0.320, 0.5, tb));
   }
 }

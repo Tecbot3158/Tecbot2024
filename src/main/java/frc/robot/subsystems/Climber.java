@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,6 +28,9 @@ public class Climber extends SubsystemBase {
    cmL = new TecbotSpeedController(RobotMap.climberPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
    cmR = new TecbotSpeedController(RobotMap.climberPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
 
+   cmL.getCANSparkMax().setIdleMode(IdleMode.kBrake);
+   cmR.getCANSparkMax().setIdleMode(IdleMode.kBrake);
+
    leftEncoderZeroValue = cmL.getEncPosition();
    rightEncoderZeroValue = cmR.getEncPosition();
 
@@ -50,7 +55,7 @@ public class Climber extends SubsystemBase {
     }
 
      
-    if( cmR.getEncPosition() <= (rightEncoderZeroValue - 18) && climberSpeedR < 0){
+    if( cmR.getEncPosition() <= (rightEncoderZeroValue - 60) && climberSpeedR < 0){
       climberSpeedR = 0;
     }
 
@@ -60,7 +65,7 @@ public class Climber extends SubsystemBase {
     }}*/
     
 
-    if( (cmL.getEncPosition() >= leftEncoderZeroValue + 18) && climberSpeedL > 0){
+    if( (cmL.getEncPosition() >= leftEncoderZeroValue + 60 ) && climberSpeedL > 0){
       climberSpeedL = 0;
     }
 
