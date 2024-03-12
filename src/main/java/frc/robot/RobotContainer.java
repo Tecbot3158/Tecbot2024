@@ -18,15 +18,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoDriveAndShootBlue;
-import frc.robot.commands.AutoDriveAndShootLeftSiteBlue;
+import frc.robot.commands.AutoDriveAndShoot;
+import frc.robot.commands.AutoDriveAndShootLeftSite;
 import frc.robot.commands.AutoDriveAndShootLeftSiteRed;
 import frc.robot.commands.AutoDriveAndShootRed;
-import frc.robot.commands.AutoDriveAndShootRightSiteBlue;
+import frc.robot.commands.AutoDriveAndShootRightSite;
 import frc.robot.commands.AutoDriveAndShootRightSiteRed;
-import frc.robot.commands.AutoDriveShootAndMidBlue;
+import frc.robot.commands.AutoDriveShootAndMid;
 import frc.robot.commands.AutoDriveShootAndMidRed;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.TestAuto;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -55,14 +56,15 @@ public class RobotContainer {
 
   private final CommandXboxController m_controller2 = new CommandXboxController(1);
 
-  public AutoDriveAndShootBlue AutoDriveShootBlue;
+  public AutoDriveAndShoot AutoDriveShoot;
   public AutoDriveAndShootRed AutoDriveShootRed;
-  public AutoDriveAndShootLeftSiteBlue AutoDriveShootLeftSiteBlue;
+  public AutoDriveAndShootLeftSite AutoDriveShootLeftSite;
   public AutoDriveAndShootLeftSiteRed AutoDriveShootLeftSiteRed;
-  public AutoDriveAndShootRightSiteBlue AutoDriveShootRightSiteBlue;
+  public AutoDriveAndShootRightSite AutoDriveShootRightSite;
   public AutoDriveAndShootRightSiteRed AutoDriveShootRightSiteRed ;
-  public AutoDriveShootAndMidBlue AutoDriveShootMidBlue;
+  public AutoDriveShootAndMid AutoDriveShootMid;
   public AutoDriveShootAndMidRed AutoDriveShootMidRed;
+  public TestAuto TestAuto;
   
   public SendableChooser<Command> m_auto_chooser;
 
@@ -92,26 +94,28 @@ public class RobotContainer {
     m_drivetrainSubsystem.setDefaultCommand(ddc);
 
     // Configure the button bindings
-    AutoDriveShootBlue = new AutoDriveAndShootBlue(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShoot = new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem);
     AutoDriveShootRed = new AutoDriveAndShootRed(m_drivetrainSubsystem, rampSubsystem);
-    AutoDriveShootLeftSiteBlue = new AutoDriveAndShootLeftSiteBlue(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootLeftSite = new AutoDriveAndShootLeftSite(m_drivetrainSubsystem, rampSubsystem);
     AutoDriveShootLeftSiteRed = new AutoDriveAndShootLeftSiteRed(m_drivetrainSubsystem, rampSubsystem);
-    AutoDriveShootRightSiteBlue = new AutoDriveAndShootRightSiteBlue(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootRightSite = new AutoDriveAndShootRightSite(m_drivetrainSubsystem, rampSubsystem);
     AutoDriveShootRightSiteRed = new AutoDriveAndShootRightSiteRed(m_drivetrainSubsystem, rampSubsystem);
-    AutoDriveShootMidBlue = new AutoDriveShootAndMidBlue(m_drivetrainSubsystem, rampSubsystem);
+    AutoDriveShootMid = new AutoDriveShootAndMid(m_drivetrainSubsystem, rampSubsystem);
     AutoDriveShootMidRed = new AutoDriveShootAndMidRed(m_drivetrainSubsystem, rampSubsystem);
+    TestAuto = new TestAuto(m_drivetrainSubsystem);
 
     
     m_auto_chooser = new SendableChooser<>();
     
-    m_auto_chooser.setDefaultOption("AutoDriveShootBlue", new AutoDriveAndShootBlue(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.setDefaultOption("AutoDriveShoot", new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootRed", new AutoDriveAndShootRed(m_drivetrainSubsystem, rampSubsystem));
-    m_auto_chooser.addOption("AutoDriveShootLeftSiteBlue", new AutoDriveAndShootLeftSiteBlue(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootLeftSite", new AutoDriveAndShootLeftSite(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootLeftSiteRed", new AutoDriveAndShootLeftSiteRed(m_drivetrainSubsystem, rampSubsystem));
-    m_auto_chooser.addOption("AutoDriveShootRightSiteBlue", new AutoDriveAndShootRightSiteBlue(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootRightSite", new AutoDriveAndShootRightSite(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootRightSiteRed", new AutoDriveAndShootRightSiteRed(m_drivetrainSubsystem, rampSubsystem));
-    m_auto_chooser.addOption("AutoDriveShootMidBlue", new AutoDriveShootAndMidBlue(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootMid", new AutoDriveShootAndMid(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootMidRed", new AutoDriveShootAndMidRed(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("TestAuto", new TestAuto(m_drivetrainSubsystem));
 
     SmartDashboard.putData(m_auto_chooser);
   }

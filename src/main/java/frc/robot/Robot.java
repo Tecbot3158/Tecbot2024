@@ -14,12 +14,11 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.AutoDriveAndShootBlue;
+import frc.robot.commands.AutoDriveAndShoot;
 import frc.robot.commands.AutoDriveToPosition;
 import frc.robot.commands.Sequence1;
 import frc.robot.resources.TecbotPWMLEDStrip;
@@ -53,10 +52,6 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     //ledStrip.setSolidHSV(69, 255, 255);
-
-    if(!DriverStation.isTeleopEnabled()){
-       // m_robotContainer.getRampSensorSubsystem().turnOffLEDs();
-    }
   }
 
   @Override
@@ -101,13 +96,11 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     /*Robot.getRobotContainer().getClimber().onR();
     Robot.getRobotContainer().getClimber().onL();*/
-    Robot.getRobotContainer().getRampSensorSubsystem().setNoteSensor(false);
+    Robot.getRobotContainer().getRampSensorSubsystem().setNoteSensor(true);
   }
 
   @Override
-  public void teleopExit() {
-    m_robotContainer.getRampSensorSubsystem().turnOffLEDs();
-  }
+  public void teleopExit() {}
 
   @Override
   public void testInit() {

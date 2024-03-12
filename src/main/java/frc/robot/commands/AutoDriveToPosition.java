@@ -55,7 +55,7 @@ public class AutoDriveToPosition extends Command {
     totalMagnitude = (new Translation2d(dx, dy) ).getNorm();
 
     double dr = finalR - initialR;
-    totalRotation = (new Rotation2d(dr)).getDegrees();
+    totalRotation = (new Rotation2d(dr)).getRadians();
 
   }
 
@@ -74,12 +74,15 @@ public class AutoDriveToPosition extends Command {
 
     SmartDashboard.putNumber("Sx", dx);
     SmartDashboard.putNumber("Sy", dy);
+    SmartDashboard.putNumber("Sr", dr);
+
+    SmartDashboard.putNumber("Angle", driveTrain.getGyroscopeRotation().getRadians());
 
     Translation2d tr = new Translation2d(dx, dy);
     double advance = tr.getNorm()/totalMagnitude;
 
     Rotation2d rt = new Rotation2d(dr);
-    double rotationAdvance = rt.getDegrees()/totalRotation;
+    double rotationAdvance = rt.getRadians()/totalRotation;
     
     currentMagnitude = tr.getNorm(); // vector size
     tr = tr.div(currentMagnitude);
@@ -93,14 +96,14 @@ public class AutoDriveToPosition extends Command {
     
     System.out.println("Advance : " + advance);
     // determine percentage. 
-    
+     
     if( advance > 0.05){
 
       //advance = 1; // is a percentual control. 
-      if( advance< 0.9 )
-        advance = 0.5;
-      else
+      if( advance < 0.9 )
         advance = 0.9;
+      else
+        advance = 0.5;
       
     
     }else{
@@ -123,11 +126,12 @@ public class AutoDriveToPosition extends Command {
 
     System.out.println("Vx : " + tr.getX()*advance );
     System.out.println("Vy : " + tr.getY()*advance );
-    
+  
+
     double xSpeed = tr.getX()*advance;
     double ySpeed = tr.getY()*advance;
 
-    double rSpeed = rt.getDegrees()*rotationAdvance;
+    double rSpeed = dr*rotationAdvance;
 
     
     /* 
@@ -150,7 +154,7 @@ public class AutoDriveToPosition extends Command {
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         xSpeed,
                         ySpeed,
-                        rSpeed,
+                        dr*(Math.PI/180),
                         driveTrain.getGyroscopeRotation()
                 )
         );

@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.resources.Navx;
 
 import static frc.robot.Constants.*;
 
@@ -221,8 +222,10 @@ public class DriveTrain extends SubsystemBase {
     odometer.update(getGyroscopeRotation(),positions);
     double PositionX = odometer.getPoseMeters().getX();
     double PositionY = odometer.getPoseMeters().getY();
+    double PositionR = m_navx.getAngle();
     SmartDashboard.putNumber("X", PositionX);
     SmartDashboard.putNumber("Y", PositionY);
+    SmartDashboard.putNumber("R", PositionR);
 
     SmartDashboard.putNumber("Navx", m_navx.getAngle());
 

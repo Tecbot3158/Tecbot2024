@@ -41,8 +41,6 @@ public class OI {
         pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.6, -1, 0)  );
         pilot.button(6).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
 
-        pilot.pov(90).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
-
         copilot.a().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0));
         copilot.b().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .08, -.31, 0));
         copilot.x().whileTrue(new RampAction(robotContainer.getRampSubsystem(), 0.55, -.95, 0));
