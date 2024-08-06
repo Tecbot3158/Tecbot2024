@@ -11,6 +11,7 @@ import com.swervedrivespecialties.swervelib.MotorType;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.resources.Navx;
 
 import static frc.robot.Constants.*;
@@ -85,6 +87,8 @@ public class DriveTrain extends SubsystemBase {
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
   public static SwerveDriveOdometry odometer;
+
+  private SwerveDrivePoseEstimator poseEstimator;
   
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
@@ -160,7 +164,7 @@ public class DriveTrain extends SubsystemBase {
                 .withSteerOffset(Constants.BACK_RIGHT_MODULE_STEER_OFFSET)
                 .build();
 
-
+    m_navx.zeroYaw();
     odometer = new SwerveDriveOdometry(m_kinematics, getGyroscopeRotation(),
                 new SwerveModulePosition[]{ 
                   m_frontLeftModule.getPosition(),
@@ -168,6 +172,14 @@ public class DriveTrain extends SubsystemBase {
                   m_backLeftModule.getPosition(),
                   m_backRightModule.getPosition()
                 }
+              );
+    poseEstimator = new SwerveDrivePoseEstimator(m_kinematics, getGyroscopeRotation(),
+                new SwerveModulePosition[]{ 
+                  m_frontLeftModule.getPosition(),
+                  m_frontRightModule.getPosition(),
+                  m_backLeftModule.getPosition(),
+                  m_backRightModule.getPosition()
+                }, new Pose2d()
               );
   }
 
@@ -187,7 +199,8 @@ public class DriveTrain extends SubsystemBase {
     }
 
     // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+   // return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+    return Rotation2d.fromDegrees(- m_navx.getYaw());
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -220,14 +233,22 @@ public class DriveTrain extends SubsystemBase {
     positions[3] = m_backRightModule.getPosition();
     
     odometer.update(getGyroscopeRotation(),positions);
+    poseEstimator.update(getGyroscopeRotation(),positions);
+
     double PositionX = odometer.getPoseMeters().getX();
     double PositionY = odometer.getPoseMeters().getY();
-    double PositionR = m_navx.getAngle();
+    double PositionR = getGyroscopeRotation().getDegrees();
     SmartDashboard.putNumber("X", PositionX);
     SmartDashboard.putNumber("Y", PositionY);
     SmartDashboard.putNumber("R", PositionR);
 
-    SmartDashboard.putNumber("Navx", m_navx.getAngle());
+    SmartDashboard.putNumber("Navx", m_navx.getYaw());
+
+    if(Robot.getRobotContainer().getVision().hasPose())
+    {
+      var estimatedVisionPose = Robot.getRobotContainer().getVision().getEstimatedPosition();
+      poseEstimator.addVisionMeasurement(estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
+    }
 
   }
 }

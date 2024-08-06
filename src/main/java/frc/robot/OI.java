@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.RampAction;
 import frc.robot.commands.Sequence1;
 import frc.robot.commands.Sequence2;
+import frc.robot.commands.IntakeIn;
 import frc.robot.commands.OffL;
 /*import frc.robot.commands.S1F;
 import frc.robot.commands.S2F;
@@ -39,7 +40,9 @@ public class OI {
         pilot.leftBumper().whileTrue( new Sequence2(robotContainer.getRampSubsystem(), 1, 10));
         pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(),-0.3, 0.3, 0.0)  );
         pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.6, -1, 0)  );
-        pilot.button(6).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
+       // pilot.button(6).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
+
+        pilot.x().whileTrue(new IntakeIn());
 
         copilot.a().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0));
         copilot.b().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .08, -.31, 0));

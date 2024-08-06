@@ -29,6 +29,7 @@ import frc.robot.commands.AutoDriveShootAndMidRed;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.TestAuto;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.resources.Vision;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSensorSubsystem;
@@ -51,6 +52,7 @@ public class RobotContainer {
 
 
   private final RampSensorSubsystem rampSensorSubsystem;
+  private final Vision vision;
 
   private final  CommandXboxController m_controller = new CommandXboxController(0);
 
@@ -82,6 +84,7 @@ public class RobotContainer {
     //climber = new Climber();
     rampSubsystem = new RampSubsystem(this);
     climber = new Climber(this);
+    vision = new Vision();
 
     rampSensorSubsystem = new RampSensorSubsystem();
     //climber.setController(m_controller.getHID() );
@@ -146,6 +149,11 @@ public class RobotContainer {
 
   public RampSensorSubsystem getRampSensorSubsystem(){
     return rampSensorSubsystem;
+  }
+
+  public Vision getVision()
+  {
+    return vision;
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
