@@ -1,12 +1,14 @@
-package frc.robot.commands;
+package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Sequence1;
+import frc.robot.commands.ZeroRamp;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSubsystem;
 
-public class AutoDriveAndShootLeftSiteRed extends SequentialCommandGroup {
+public class AutoDriveAndShootRightSite extends SequentialCommandGroup{
     
-    public AutoDriveAndShootLeftSiteRed(DriveTrain driveTrain, RampSubsystem ramp){
+    public AutoDriveAndShootRightSite(DriveTrain driveTrain, RampSubsystem ramp){
 
         addCommands(
             new AutoDriveToPosition(driveTrain , 0, 0,.60,0,0,0, 1.6),
@@ -16,5 +18,4 @@ public class AutoDriveAndShootLeftSiteRed extends SequentialCommandGroup {
         );
 
     }
-
 }

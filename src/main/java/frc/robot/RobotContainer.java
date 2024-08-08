@@ -5,6 +5,9 @@
 package frc.robot;
 
 import java.util.function.DoubleSupplier;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.util.sendable.Sendable;
@@ -18,17 +21,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoDriveAndShoot;
-import frc.robot.commands.AutoDriveAndShootLeftSite;
-import frc.robot.commands.AutoDriveAndShootLeftSiteRed;
-import frc.robot.commands.AutoDriveAndShootRed;
-import frc.robot.commands.AutoDriveAndShootRightSite;
-import frc.robot.commands.AutoDriveAndShootRightSiteRed;
-import frc.robot.commands.AutoDriveShootAndMid;
-import frc.robot.commands.AutoDriveShootAndMidRed;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.TestAuto;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.autos.AutoDriveAndShoot;
+import frc.robot.commands.autos.AutoDriveAndShootLeftSite;
+import frc.robot.commands.autos.AutoDriveAndShootLeftSiteRed;
+import frc.robot.commands.autos.AutoDriveAndShootRed;
+import frc.robot.commands.autos.AutoDriveAndShootRightSite;
+import frc.robot.commands.autos.AutoDriveAndShootRightSiteRed;
+import frc.robot.commands.autos.AutoDriveShootAndMid;
+import frc.robot.commands.autos.AutoDriveShootAndMidRed;
 import frc.robot.resources.Vision;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -119,6 +122,7 @@ public class RobotContainer {
     m_auto_chooser.addOption("AutoDriveShootMid", new AutoDriveShootAndMid(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootMidRed", new AutoDriveShootAndMidRed(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("TestAuto", new TestAuto(m_drivetrainSubsystem));
+    m_auto_chooser.addOption("PathPlannerTest", new PathPlannerAuto("PathPlannerTest"));
 
     SmartDashboard.putData(m_auto_chooser);
   }

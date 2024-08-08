@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -49,4 +51,11 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 5; // FIXME Set back right steer motor ID
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11; // FIXME Set back right steer encoder ID
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(102.92); // FIXME Measure and set back right steer offset
+
+    // The maximum speed at which a swerve module can go (in m/s).
+    public static final double MAX_MODULE_SPEED = 5.0;
+    // The distance from the center of the robot to the farthest module (in meters).
+    public static final double DRIVE_BASE_RADIUS = 0.52;
+
+    public static final Pose2d SHOOTING_POSITION = new Pose2d(14.93, 5.3, new Rotation2d(Math.PI));
 }

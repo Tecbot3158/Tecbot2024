@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.security.interfaces.RSAMultiPrimePrivateCrtKey;
 
+import com.pathplanner.lib.path.PathConstraints;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -16,6 +18,7 @@ import frc.robot.commands.S3F;*/
 import frc.robot.commands.OnL;
 import frc.robot.commands.StopMotor;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.autos.swerve.PathfindToSpeaker;
 import frc.robot.commands.RampAction;
 /*import frc.robot.commands.S1B;
 import frc.robot.commands.S2B;
@@ -42,7 +45,8 @@ public class OI {
         pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.6, -1, 0)  );
        // pilot.button(6).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
 
-        pilot.x().whileTrue(new IntakeIn());
+        pilot.x().whileTrue(new PathfindToSpeaker(
+            new PathConstraints(0.5, 0.5, 0.3, 0.5)));
 
         copilot.a().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0));
         copilot.b().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .08, -.31, 0));

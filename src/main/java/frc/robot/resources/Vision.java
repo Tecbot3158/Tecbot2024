@@ -4,7 +4,6 @@
 
 package frc.robot.resources;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -13,12 +12,10 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
@@ -30,11 +27,13 @@ public class Vision extends SubsystemBase {
   PhotonPoseEstimator poseEstimator;
 
   boolean hasPose;  
+  double poseAmbiguity = 0;
   
 public Vision() {
     photonCamera = new PhotonCamera("limelight");
 
-    Transform3d cam = new Transform3d(new Translation3d(-0.33, 0, 0.40), new Rotation3d(0f, 0f, Math.PI));
+    Transform3d cam = new Transform3d(new Translation3d(-0.33, 0, 0.33), 
+    new Rotation3d(Math.toRadians(-3.5), Math.toRadians(10), Math.PI));
 
     poseEstimator = new PhotonPoseEstimator(AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(), 
       PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, cam);
@@ -70,19 +69,18 @@ public Vision() {
   @Override
   public void periodic() {
     result = photonCamera.getLatestResult();
+    
 
     Optional<EstimatedRobotPose> pose = poseEstimator.update();
-    if (pose.isPresent()) {
+    if (hasTargets() && pose.isPresent()) {
       estimatedPose = pose.get();
-      SmartDashboard.putNumber("Vision Pose X", estimatedPose.estimatedPose.getX());
-      SmartDashboard.putNumber("Vision Pose Y", estimatedPose.estimatedPose.getY());
       hasPose = true;
+
+      // Reject pose if ambiguity is greater than 0.2
+      if(result.getBestTarget().getPoseAmbiguity() >= 0.1) hasPose = false;
     }
     else hasPose = false;
 
-    SmartDashboard.putNumber("Pitch", getPitch());
-    SmartDashboard.putNumber("Yaw", getYaw());
-    SmartDashboard.putBoolean("Targets", result.hasTargets());
 
   }
 

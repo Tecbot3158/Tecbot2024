@@ -2,19 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.Sequence1;
+import frc.robot.commands.ZeroRamp;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoDriveAndShoot extends SequentialCommandGroup {
+public class AutoDriveAndShootBlue extends SequentialCommandGroup {
   /** Creates a new AutoDriveAndShoot. */
-  public AutoDriveAndShoot(DriveTrain driveTrain, RampSubsystem ramp) {
+  public AutoDriveAndShootBlue(DriveTrain driveTrain, RampSubsystem ramp) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     /* 
@@ -38,15 +40,15 @@ public class AutoDriveAndShoot extends SequentialCommandGroup {
 
     
     addCommands(
-    new AutoDriveToPosition(driveTrain , 0, 0,.40,0,0,0, 1.7),
-    new Sequence1( ramp, 0.50 , 0.65),
+    new AutoDriveToPosition(driveTrain , 0, 0,.50,0,0,0, 1.7),
+    new Sequence1( ramp, 0.50 , 0.90),
     new ZeroRamp(ramp),
-    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 0.4, 0, 2.00, 0, 0, 0, 0.30, 0.40, 1.6),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 0.5, 0, 2.00, 0, 0, 0, 0.30, 0.40, 1.6),//valor original rm .30
     new AutoDriveToPosition(driveTrain , 2.00, 0,.40,0,0,0, 1.7),
-    new Sequence1( ramp, 0.40 , 0.70),
+    new Sequence1( ramp, 0.40 , 0.90),
     new ZeroRamp(ramp),
     new AutoDriveToPosition(driveTrain , 0.40, 0,1.00,1.55,0,0, 1.7),
-    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.00, 1.55, 2.00, 1.55, 0, 0, .25, .40, 1.6),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.00, 1.55, 2.00, 1.55, 0, 0, .40, .43, 1.6),//valor originial rm 0.25
     new AutoDriveToPosition(driveTrain , 2.00, 1.55,0.30,0.0,0,0, 1.7),
     new Sequence1( ramp, 0.70 , 1.0),
     new ZeroRamp(ramp)

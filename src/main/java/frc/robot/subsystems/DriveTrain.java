@@ -4,8 +4,12 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindHolonomic;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.swervedrivespecialties.swervelib.MkSwerveModuleBuilder;
 import com.swervedrivespecialties.swervelib.MotorType;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
@@ -16,15 +20,20 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -89,6 +98,9 @@ public class DriveTrain extends SubsystemBase {
   public static SwerveDriveOdometry odometer;
 
   private SwerveDrivePoseEstimator poseEstimator;
+
+  private Field2d m_field;
+  private HolonomicPathFollowerConfig pathFollowerConfig;
   
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
@@ -181,6 +193,24 @@ public class DriveTrain extends SubsystemBase {
                   m_backRightModule.getPosition()
                 }, new Pose2d()
               );
+
+
+    m_field = new Field2d();
+    SmartDashboard.putData("Field", m_field);
+
+    
+    pathFollowerConfig = new HolonomicPathFollowerConfig(Constants.MAX_MODULE_SPEED, 
+    Constants.DRIVE_BASE_RADIUS, new ReplanningConfig());
+
+    AutoBuilder.configureHolonomic(this::getPose2d, this::resetPose, this::getChassisSpeeds, 
+    this::drive,    pathFollowerConfig, () -> {
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            }, this);
+
   }
 
   /**
@@ -207,10 +237,45 @@ public class DriveTrain extends SubsystemBase {
     m_chassisSpeeds = chassisSpeeds;
   }
 
+  public ChassisSpeeds getChassisSpeeds()
+  {
+    return m_chassisSpeeds;
+  }
+
 
   public Pose2d getPose2d(){
-    return odometer.getPoseMeters();
+    //return odometer.getPoseMeters();
+    return poseEstimator.getEstimatedPosition();
   }
+
+  public SwerveModulePosition[] getWheelPositions()
+  {
+    SwerveModulePosition positions[] = new SwerveModulePosition[4];
+    positions[0] = m_frontLeftModule.getPosition();
+    positions[1] = m_frontRightModule.getPosition();
+    positions[2] = m_backLeftModule.getPosition();
+    positions[3] = m_backRightModule.getPosition();
+
+    return positions;
+  }
+
+  public void resetPose(Pose2d pose)
+  {
+    poseEstimator.resetPosition(getGyroscopeRotation(), getWheelPositions(), pose);
+  }
+
+  public Command pathFindToPose(Pose2d targetPose, PathConstraints constrains)
+  {
+    return new PathfindHolonomic(targetPose, constrains, 
+    this::getPose2d, this::getChassisSpeeds, this::drive, pathFollowerConfig, this);
+  }
+
+  public Command pathFindToSpeaker(PathConstraints constraints)
+  {
+    return pathFindToPose(Constants.SHOOTING_POSITION, constraints);
+  }
+
+
 
 
   @Override
@@ -241,8 +306,12 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("X", PositionX);
     SmartDashboard.putNumber("Y", PositionY);
     SmartDashboard.putNumber("R", PositionR);
+    SmartDashboard.putNumber("Odo R", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
     SmartDashboard.putNumber("Navx", m_navx.getYaw());
+    
+    SmartDashboard.putNumber("X Speed", getChassisSpeeds().vxMetersPerSecond);
+    SmartDashboard.putNumber("Y Speed", getChassisSpeeds().vyMetersPerSecond);
 
     if(Robot.getRobotContainer().getVision().hasPose())
     {
@@ -250,5 +319,6 @@ public class DriveTrain extends SubsystemBase {
       poseEstimator.addVisionMeasurement(estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
     }
 
+    m_field.setRobotPose(getPose2d());
   }
 }

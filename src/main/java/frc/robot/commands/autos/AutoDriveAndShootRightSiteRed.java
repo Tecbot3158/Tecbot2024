@@ -1,6 +1,8 @@
-package frc.robot.commands;
+package frc.robot.commands.autos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.Sequence1;
+import frc.robot.commands.ZeroRamp;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSubsystem;
 

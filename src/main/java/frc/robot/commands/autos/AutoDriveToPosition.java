@@ -2,17 +2,16 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.autos;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.RampSubsystem;
 
-public class AutoDriveToPositionWhileRolling extends Command {
+public class AutoDriveToPosition extends Command {
   /** Creates a new AutoDriveToPosition. */
   double initialX;
   double finalX;
@@ -25,22 +24,17 @@ public class AutoDriveToPositionWhileRolling extends Command {
 
   double totalMagnitude;
   double currentMagnitude;
+  double totalRotation;
 
-  double rollingInitOnMoveCompletion;
-  double rollingSpeed;
   double speedMultiplier;
 
   DriveTrain driveTrain;
-  RampSubsystem rampSubsystem;
 
-
-  public AutoDriveToPositionWhileRolling(DriveTrain dt,RampSubsystem rp, double xi, double yi, double xf, double yf, 
-  double ri , double rf, double rm, double rs, double sm) {
+  public AutoDriveToPosition(DriveTrain dt, double xi, double yi, double xf, double yf, double ri , double rf, double sm){
     // Use addRequirements() here to declare subsystem dependencies.
     
-    addRequirements(dt, rp);
+    addRequirements(dt);
     driveTrain = dt;
-    rampSubsystem = rp;
    initialX = xi;
    finalX = xf;
 
@@ -49,10 +43,6 @@ public class AutoDriveToPositionWhileRolling extends Command {
 
    initialR =ri;
    finalR = rf;
-  
-   rollingInitOnMoveCompletion = rm;
-   rollingSpeed = rs;
-   
    speedMultiplier = sm;
   }
 
@@ -64,73 +54,107 @@ public class AutoDriveToPositionWhileRolling extends Command {
     double dy = finalY - initialY;
     totalMagnitude = (new Translation2d(dx, dy) ).getNorm();
 
+    double dr = finalR - initialR;
+    totalRotation = (new Rotation2d(dr)).getRadians();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
+    double currentangle = driveTrain.getGyroscopeRotation().getDegrees();
+
     Translation2d currentTranslation = driveTrain.getPose2d().getTranslation();
     // determine magnitude from origin pos to final pos
     double dx = finalX - currentTranslation.getX();
     double dy = finalY - currentTranslation.getY();
 
+    double dr = finalR - currentangle;
+
     SmartDashboard.putNumber("Sx", dx);
     SmartDashboard.putNumber("Sy", dy);
+    SmartDashboard.putNumber("Sr", dr);
 
+    SmartDashboard.putNumber("Angle", driveTrain.getGyroscopeRotation().getRadians());
 
     Translation2d tr = new Translation2d(dx, dy);
     double advance = tr.getNorm()/totalMagnitude;
+
+    Rotation2d rt = new Rotation2d(dr);
+    double rotationAdvance = rt.getRadians()/totalRotation;
     
     currentMagnitude = tr.getNorm(); // vector size
     tr = tr.div(currentMagnitude);
     
     // determine magnitude from current por to final pos
     
-    //System.out.println(currentMagnitude);
+    System.out.println(currentMagnitude);
     SmartDashboard.putNumber("CurrentMagnitude", currentMagnitude);
 
-    //System.out.println(totalMagnitude);
+    System.out.println(totalMagnitude);
     
-    //System.out.println("Advance : " + advance);
+    System.out.println("Advance : " + advance);
     // determine percentage. 
-    SmartDashboard.putNumber("Advance!!", advance);
-    SmartDashboard.putNumber("Picking on!!", rollingInitOnMoveCompletion);
-
-
-     if(advance < rollingInitOnMoveCompletion){
-      //System.out.println("*****************************************");
-      rampSubsystem.getRamp(0, 0, rollingSpeed);
-    }
-
+     
     if( advance > 0.05){
 
       //advance = 1; // is a percentual control. 
-      if( advance< 0.9 )
-        advance = 0.5;
-      else
+      if( advance < 0.9 )
         advance = 0.9;
+      else
+        advance = 0.5;
       
     
     }else{
       advance = Math.max(0.2,advance); // minimum advance
     }
 
+    if( rotationAdvance > 0.05){
 
-   
-
-
-    //System.out.println("Vx : " + tr.getX()*advance );
-    //System.out.println("Vy : " + tr.getY()*advance );
-
-    double corr = (0 - driveTrain.getGyroscopeRotation().getDegrees())/20;
+      //advance = 1; // is a percentual control. 
+      if( rotationAdvance < 0.9 )
+        rotationAdvance = 0.5;
+      else
+        rotationAdvance = 0.9;
+      
     
-    //corr*0.0015
+    }else{
+      rotationAdvance = Math.max(0.2,advance); // minimum advance
+    }
+
+
+    System.out.println("Vx : " + tr.getX()*advance );
+    System.out.println("Vy : " + tr.getY()*advance );
+  
+
+    double xSpeed = tr.getX()*advance;
+    double ySpeed = tr.getY()*advance;
+
+    double rSpeed = dr*rotationAdvance;
+
+    
+    /* 
+    if(xSpeed > 3)
+    xSpeed = 4;
+    else if (xSpeed > 1) 
+    xSpeed = xSpeed + 1*speedMultiplier;
+    else 
+    xSpeed = xSpeed + 0.2*speedMultiplier;
+
+    if(ySpeed > 3)
+    ySpeed = 4;
+    else if (ySpeed > 1) 
+    ySpeed = ySpeed + 1*speedMultiplier;
+    else 
+    ySpeed = ySpeed + 0.2*speedMultiplier;
+    */
+
     driveTrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        tr.getX()*advance*speedMultiplier,
-                        tr.getY()*advance*speedMultiplier,
-                        0,
+                        xSpeed,
+                        ySpeed,
+                        dr*(Math.PI/180),
                         driveTrain.getGyroscopeRotation()
                 )
         );
@@ -143,7 +167,6 @@ public class AutoDriveToPositionWhileRolling extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    rampSubsystem.getRamp(0, 0, 0);
       driveTrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         0,
