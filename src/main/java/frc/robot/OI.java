@@ -19,6 +19,7 @@ import frc.robot.commands.OnL;
 import frc.robot.commands.StopMotor;
 import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.commands.autos.swerve.PathfindToSpeaker;
+import frc.robot.commands.autos.swerve.TogglePrecisionMode;
 import frc.robot.commands.autos.swerve.TurnToAngle;
 import frc.robot.commands.shooter.ControlShooter;
 import frc.robot.commands.RampAction;
@@ -49,9 +50,11 @@ public class OI {
        // pilot.button(6).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
 
         pilot.x().whileTrue(new PathfindToSpeaker(
-            new PathConstraints(2, 2, 1, 2)));
+            new PathConstraints(2, 2,
+             1, 2)));
 
         pilot.a().whileTrue(new ControlShooter(3200, 3200));
+        pilot.start().onTrue(new TogglePrecisionMode());
 
         copilot.a().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0));
         copilot.b().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .08, -.31, 0));

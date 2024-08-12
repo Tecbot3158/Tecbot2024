@@ -57,6 +57,13 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 11; // FIXME Set back right steer encoder ID
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(102.92); // FIXME Measure and set back right steer offset
 
+    // The maximum change in speed (in m/s^2) that will be passed to the swerve drive.
+    public static final double SWERVE_MAX_ACCELERATION = 5;
+    // The maximum change in angular speed (in rad/s^2) that will be passed to the swerve drive.
+    public static final double SWERVE_MAX_ANGULAR_ACCELERATION = 3;
+
+    public static final double SWERVE_PRECISION_MODE_MULTIPLIER = 0.5;
+
     // The maximum speed at which a swerve module can go (in m/s).
     public static final double MAX_MODULE_SPEED = DriveTrain.MAX_VELOCITY_METERS_PER_SECOND;
     // The distance from the center of the robot to the farthest module (in meters).
@@ -88,7 +95,7 @@ public final class Constants {
     public static final double SHOOTER_TOP_PID_I = 0;
     public static final double SHOOTER_TOP_PID_D = 0.000005;
 
-
+    
     public static final double SHOOTER_BOTTOM_FEEDFORWARD_S = 0;
     public static final double SHOOTER_BOTTOM_FEEDFORWARD_V = 0.00018;
 

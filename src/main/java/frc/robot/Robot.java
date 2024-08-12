@@ -10,6 +10,8 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
@@ -41,7 +43,7 @@ public class Robot extends TimedRobot {
     m_oi = new OI(m_robotContainer , m_robotContainer.getPilot(), m_robotContainer.getCopilot());
     m_oi.configureButtonBindings();
     m_chooser = m_robotContainer.m_auto_chooser;
-  
+    
   }
   
   public static RobotContainer getRobotContainer(){

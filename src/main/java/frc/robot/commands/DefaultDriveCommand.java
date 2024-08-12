@@ -1,7 +1,9 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.DriveTrain;
 
 import java.util.function.DoubleSupplier;
@@ -13,39 +15,43 @@ public class DefaultDriveCommand extends Command {
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
 
-    /*
-    * 
-    
-    public DefaultDriveCommand(DriveTrain drivetrainSubsystem,
-                               DoubleSupplier translationXSupplier,
-                               DoubleSupplier translationYSupplier,
-                               DoubleSupplier rotationSupplier) {
+    private SlewRateLimiter xLimiter, yLimiter, rotLimiter;
+
+    public DefaultDriveCommand(DriveTrain drivetrainSubsystem, DoubleSupplier translationXSupplier,
+        DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) 
+        {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
 
-        addRequirements(drivetrainSubsystem);
-    }
-    */
-    public DefaultDriveCommand(DriveTrain drivetrainSubsystem, DoubleSupplier translationXSupplier,
-        DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
-          this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.m_translationXSupplier = translationXSupplier;
-        this.m_translationYSupplier = translationYSupplier;
-        this.m_rotationSupplier = rotationSupplier;
+        xLimiter = new SlewRateLimiter(Constants.SWERVE_MAX_ACCELERATION);
+        yLimiter = new SlewRateLimiter(Constants.SWERVE_MAX_ACCELERATION);
+        rotLimiter = new SlewRateLimiter(Constants.SWERVE_MAX_ANGULAR_ACCELERATION);
 
         addRequirements(drivetrainSubsystem);
     }
 
     @Override
     public void execute() {
+
+        double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND;
+        double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND;
+        double rotation = rotLimiter.calculate(m_rotationSupplier.getAsDouble()) * DriveTrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+
+        if(m_drivetrainSubsystem.isOnPrecisionMode())
+        {
+            xSpeed *= Constants.SWERVE_PRECISION_MODE_MULTIPLIER;
+            ySpeed *= Constants.SWERVE_PRECISION_MODE_MULTIPLIER;
+            rotation *= Constants.SWERVE_PRECISION_MODE_MULTIPLIER;
+        }
+
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        m_translationXSupplier.getAsDouble(),
-                        m_translationYSupplier.getAsDouble(),
-                        m_rotationSupplier.getAsDouble(),
+                        xSpeed,
+                        ySpeed,
+                        rotation,
                         m_drivetrainSubsystem.getGyroscopeRotation()
                 )
         );

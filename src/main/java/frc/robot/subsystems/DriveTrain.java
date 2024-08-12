@@ -109,11 +109,13 @@ public class DriveTrain extends PIDSubsystem {
   private boolean onPIDTurnTarget;
   private double turnSetpoint;
 
+  private boolean isOnPrecisionMode = false;
+
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
   public DriveTrain() {
     super(new PIDController(Constants.DRIVETRAIN_TURN_KP, 
-      Constants.DRIVETRAIN_TURN_KI, Constants.DRIVETRAIN_TURN_KD));
+      Constants.DRIVETRAIN_TURN_KI, Constants.DRIVETRAIN_TURN_KD)); 
 
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
@@ -289,7 +291,49 @@ public class DriveTrain extends PIDSubsystem {
 
 
 
+  
+  /**
+   * @param speed (rad/s)
+   */
+  public void setMaxPIDTurnSpeed(double speed)
+  {
+    maxPIDTurnSpeed = speed;
+  }
+  @Override
+  protected void useOutput(double output, double setpoint) 
+  {
+    output = frc.robot.resources.Math.clamp(output, -maxPIDTurnSpeed, maxPIDTurnSpeed);
+    ChassisSpeeds speeds = new ChassisSpeeds(0, 0, output);
+    
+    drive(speeds);
+    if(Math.abs(frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint)) < Constants.DRIVETRAIN_TURN_ARRIVE_OFFSET)
+    onPIDTurnTarget = true;
+    else 
+    onPIDTurnTarget = false;
+    
+    System.out.println(frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint));
+    
+  }
+  @Override
+  protected double getMeasurement() 
+  {
+    return frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint);
+  }
+  public boolean onPIDTurnTarget()
+  {
+    return onPIDTurnTarget;
+  }
+  public void setPIDTurnSetpoint(double setpoint)
+  {
+    turnSetpoint = setpoint;
+  }
+  
 
+  public boolean isOnPrecisionMode(){return isOnPrecisionMode;}
+  public void setPrecisionMode(boolean precisionMode){isOnPrecisionMode = precisionMode;}
+
+  
+  
   @Override
   public void periodic() {
 
@@ -336,43 +380,4 @@ public class DriveTrain extends PIDSubsystem {
     super.periodic();
   }
 
-  /**
-   * @param speed (rad/s)
-   */
-  public void setMaxPIDTurnSpeed(double speed)
-  {
-    maxPIDTurnSpeed = speed;
-  }
-
-
-  @Override
-  protected void useOutput(double output, double setpoint) 
-  {
-    output = frc.robot.resources.Math.clamp(output, -maxPIDTurnSpeed, maxPIDTurnSpeed);
-    ChassisSpeeds speeds = new ChassisSpeeds(0, 0, output);
-
-    drive(speeds);
-    if(Math.abs(frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint)) < Constants.DRIVETRAIN_TURN_ARRIVE_OFFSET)
-      onPIDTurnTarget = true;
-    else 
-      onPIDTurnTarget = false;
-
-    System.out.println(frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint));
-    
-  }
-
-  @Override
-  protected double getMeasurement() 
-  {
-    return frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint);
-  }
-
-  public boolean onPIDTurnTarget()
-  {
-    return onPIDTurnTarget;
-  }
-  public void setPIDTurnSetpoint(double setpoint)
-  {
-    turnSetpoint = setpoint;
-  }
 }
