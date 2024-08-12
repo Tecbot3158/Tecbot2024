@@ -145,6 +145,20 @@ public class TecbotSpeedController {
         }
 
     }
+    public double getEncVelocity() {
+
+        switch (motorToUse) {
+            case TALON_SRX:
+                return phoenixMotor.getSelectedSensorVelocity();
+            case CAN_SPARK_BRUSHLESS:
+                return ((CANSparkMax) frcMotor).getEncoder().getVelocity();
+
+            default:
+                DriverStation.reportWarning("That is not a Talon SRX nor a Spark Max!", true);
+                return 0;
+        }
+
+    }
 
     public void stopMotor() {
 

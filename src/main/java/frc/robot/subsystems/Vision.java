@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.resources;
+package frc.robot.subsystems;
 
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public Vision() {
     photonCamera = new PhotonCamera("limelight");
 
     Transform3d cam = new Transform3d(new Translation3d(-0.33, 0, 0.33), 
-    new Rotation3d(Math.toRadians(-3.5), Math.toRadians(10), Math.PI));
+    new Rotation3d(Math.toRadians(-3.5), Math.toRadians(5), Math.PI));
 
     poseEstimator = new PhotonPoseEstimator(AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(), 
       PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, cam);

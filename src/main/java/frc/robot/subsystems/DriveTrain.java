@@ -15,6 +15,7 @@ import com.swervedrivespecialties.swervelib.MotorType;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -41,7 +43,9 @@ import frc.robot.resources.Navx;
 
 import static frc.robot.Constants.*;
 
-public class DriveTrain extends SubsystemBase {
+import java.security.cert.TrustAnchor;
+
+public class DriveTrain extends PIDSubsystem {
 
   /**
    * The maximum voltage that will be delivered to the drive motors.
@@ -60,9 +64,9 @@ public class DriveTrain extends SubsystemBase {
    * <p>
    * This is a measure of how fast the robot should be able to drive in a straight line.
    */
-  public static final double MAX_VELOCITY_METERS_PER_SECOND = 5820.0 / 60.0 *
-          SdsModuleConfigurations.MK4I_L2.getDriveReduction() *
-          SdsModuleConfigurations.MK4I_L2.getWheelDiameter()* Math.PI;
+  public static final double MAX_VELOCITY_METERS_PER_SECOND = 6000.0 / 60.0 *
+          SdsModuleConfigurations.MK4I_L3.getDriveReduction() *
+          SdsModuleConfigurations.MK4I_L3.getWheelDiameter()* Math.PI;
   /**
    * The maximum angular velocity of the robot in radians per second.
    * <p>
@@ -100,12 +104,17 @@ public class DriveTrain extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator;
 
   private Field2d m_field;
-  private HolonomicPathFollowerConfig pathFollowerConfig;
-  
+
+  private double maxPIDTurnSpeed;
+  private boolean onPIDTurnTarget;
+  private double turnSetpoint;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
   public DriveTrain() {
+    super(new PIDController(Constants.DRIVETRAIN_TURN_KP, 
+      Constants.DRIVETRAIN_TURN_KI, Constants.DRIVETRAIN_TURN_KD));
+
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     // There are 4 methods you can call to create your swerve modules.
@@ -133,8 +142,8 @@ public class DriveTrain extends SubsystemBase {
                 .withLayout(tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                 .withSize(2, 4)
                 .withPosition(0, 0))
-                .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR)
+                .withGearRatio(SdsModuleConfigurations.MK4I_L3)
+                .withDriveMotor(MotorType.FALCON, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR)
                 .withSteerMotor(MotorType.NEO, Constants.FRONT_LEFT_MODULE_STEER_MOTOR)
                 .withSteerEncoderPort(Constants.FRONT_LEFT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.FRONT_LEFT_MODULE_STEER_OFFSET)
@@ -147,8 +156,8 @@ public class DriveTrain extends SubsystemBase {
                 .withLayout(tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                 .withSize(2, 4)
                 .withPosition(2, 0))
-                .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR)
+                .withGearRatio(SdsModuleConfigurations.MK4I_L3)
+                .withDriveMotor(MotorType.FALCON, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR)
                 .withSteerMotor(MotorType.NEO, Constants.FRONT_RIGHT_MODULE_STEER_MOTOR)
                 .withSteerEncoderPort(Constants.FRONT_RIGHT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.FRONT_RIGHT_MODULE_STEER_OFFSET)
@@ -158,8 +167,8 @@ public class DriveTrain extends SubsystemBase {
                 .withLayout(tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                 .withSize(2, 4)
                 .withPosition(4, 0))
-                .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR)
+                .withGearRatio(SdsModuleConfigurations.MK4I_L3)
+                .withDriveMotor(MotorType.FALCON, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR)
                 .withSteerMotor(MotorType.NEO, Constants.BACK_LEFT_MODULE_STEER_MOTOR)
                 .withSteerEncoderPort(Constants.BACK_LEFT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.BACK_LEFT_MODULE_STEER_OFFSET)
@@ -169,8 +178,8 @@ public class DriveTrain extends SubsystemBase {
                 .withLayout(tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                 .withSize(2, 4)
                 .withPosition(6, 0))
-                .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR)
+                .withGearRatio(SdsModuleConfigurations.MK4I_L3)
+                .withDriveMotor(MotorType.FALCON, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR)
                 .withSteerMotor(MotorType.NEO, Constants.BACK_RIGHT_MODULE_STEER_MOTOR)
                 .withSteerEncoderPort(Constants.BACK_RIGHT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.BACK_RIGHT_MODULE_STEER_OFFSET)
@@ -199,17 +208,20 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putData("Field", m_field);
 
     
-    pathFollowerConfig = new HolonomicPathFollowerConfig(Constants.MAX_MODULE_SPEED, 
-    Constants.DRIVE_BASE_RADIUS, new ReplanningConfig());
+    //pathFollowerConfig = new HolonomicPathFollowerConfig(Constants.MAX_MODULE_SPEED, 
+    //Constants.DRIVE_BASE_RADIUS, new ReplanningConfig());
 
     AutoBuilder.configureHolonomic(this::getPose2d, this::resetPose, this::getChassisSpeeds, 
-    this::drive,    pathFollowerConfig, () -> {
+    this::drive,    Constants.pathFollowerConfig, () -> {
               var alliance = DriverStation.getAlliance();
               if (alliance.isPresent()) {
                 return alliance.get() == DriverStation.Alliance.Red;
               }
               return false;
             }, this);
+
+    this.disable();
+    this.setSetpoint(0);
 
   }
 
@@ -267,7 +279,7 @@ public class DriveTrain extends SubsystemBase {
   public Command pathFindToPose(Pose2d targetPose, PathConstraints constrains)
   {
     return new PathfindHolonomic(targetPose, constrains, 
-    this::getPose2d, this::getChassisSpeeds, this::drive, pathFollowerConfig, this);
+    this::getPose2d, this::getChassisSpeeds, this::drive, Constants.pathFollowerConfig, this);
   }
 
   public Command pathFindToSpeaker(PathConstraints constraints)
@@ -320,5 +332,47 @@ public class DriveTrain extends SubsystemBase {
     }
 
     m_field.setRobotPose(getPose2d());
+
+    super.periodic();
+  }
+
+  /**
+   * @param speed (rad/s)
+   */
+  public void setMaxPIDTurnSpeed(double speed)
+  {
+    maxPIDTurnSpeed = speed;
+  }
+
+
+  @Override
+  protected void useOutput(double output, double setpoint) 
+  {
+    output = frc.robot.resources.Math.clamp(output, -maxPIDTurnSpeed, maxPIDTurnSpeed);
+    ChassisSpeeds speeds = new ChassisSpeeds(0, 0, output);
+
+    drive(speeds);
+    if(Math.abs(frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint)) < Constants.DRIVETRAIN_TURN_ARRIVE_OFFSET)
+      onPIDTurnTarget = true;
+    else 
+      onPIDTurnTarget = false;
+
+    System.out.println(frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint));
+    
+  }
+
+  @Override
+  protected double getMeasurement() 
+  {
+    return frc.robot.resources.Math.deltaAngle(m_navx.getYaw(), turnSetpoint);
+  }
+
+  public boolean onPIDTurnTarget()
+  {
+    return onPIDTurnTarget;
+  }
+  public void setPIDTurnSetpoint(double setpoint)
+  {
+    turnSetpoint = setpoint;
   }
 }

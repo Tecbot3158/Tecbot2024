@@ -32,11 +32,11 @@ import frc.robot.commands.autos.AutoDriveAndShootRightSite;
 import frc.robot.commands.autos.AutoDriveAndShootRightSiteRed;
 import frc.robot.commands.autos.AutoDriveShootAndMid;
 import frc.robot.commands.autos.AutoDriveShootAndMidRed;
-import frc.robot.resources.Vision;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSensorSubsystem;
 import frc.robot.subsystems.RampSubsystem;
+import frc.robot.subsystems.Vision;
 
 
 /**
@@ -179,7 +179,7 @@ public class RobotContainer {
 
   private static double modifyAxis(double value) {
     // Deadband
-    value = deadband(value, 0.05);
+    value = deadband(value, Constants.PILOT_DRIVING_DEADZONE);
 
     // Square the axis
     value = Math.copySign(value * value, value);
