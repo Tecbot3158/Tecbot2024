@@ -82,6 +82,10 @@ public class RampSubsystem extends SubsystemBase {
     bottomMotor.set(-sBottomSpeed);
     rollersMotor.set(intakeSeed);
   }
+  public void driveIntake(double speed)
+  {
+    rollersMotor.set(speed);
+  }
 
   public void driveShooter(double topSpeed, double bottomSpeed)
   {
@@ -93,7 +97,7 @@ public class RampSubsystem extends SubsystemBase {
     return bottomMotor;
   }
 
-  public void controlShooter(double topRPM, double bottomRPM)
+  public boolean controlShooter(double topRPM, double bottomRPM)
   {
     double topSpeed = topfeedforward.calculate(topRPM);
     topSpeed += topPIDController.calculate(topMotor.getEncVelocity(), topRPM);
@@ -108,6 +112,11 @@ public class RampSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Top Output", topSpeed);
     SmartDashboard.putNumber("Bottom Output", bottomSpeed);
+
+    double deltaTop = Math.abs(topMotor.getEncVelocity()-topRPM);
+    double deltaBottom = Math.abs(bottomMotor.getEncVelocity()-bottomRPM);
+
+    return (deltaTop<Constants.SHOOTER_RPM_ARRIVE_OFFSET) && (deltaBottom<Constants.SHOOTER_RPM_ARRIVE_OFFSET);
   }
 }
 

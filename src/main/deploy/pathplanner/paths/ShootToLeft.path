@@ -1,0 +1,87 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.8061668427374873,
+        "y": 5.5430292057165325
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.5721726455329406,
+        "y": 7.010076157919538
+      },
+      "isLocked": false,
+      "linkedName": "ShootingPos"
+    },
+    {
+      "anchor": {
+        "x": 2.8981397630253705,
+        "y": 7.000326399702681
+      },
+      "prevControl": {
+        "x": 1.211431591509265,
+        "y": 7.097823981871242
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "TopNote"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "In",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "InstaIntakeIn"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Off",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "InstaIntakeOff"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 270.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "AllianceNotes",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

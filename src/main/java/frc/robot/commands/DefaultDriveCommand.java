@@ -15,7 +15,6 @@ public class DefaultDriveCommand extends Command {
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
 
-    private SlewRateLimiter xLimiter, yLimiter, rotLimiter;
 
     public DefaultDriveCommand(DriveTrain drivetrainSubsystem, DoubleSupplier translationXSupplier,
         DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) 
@@ -25,19 +24,15 @@ public class DefaultDriveCommand extends Command {
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
 
-        xLimiter = new SlewRateLimiter(Constants.SWERVE_MAX_ACCELERATION);
-        yLimiter = new SlewRateLimiter(Constants.SWERVE_MAX_ACCELERATION);
-        rotLimiter = new SlewRateLimiter(Constants.SWERVE_MAX_ANGULAR_ACCELERATION);
-
         addRequirements(drivetrainSubsystem);
     }
 
     @Override
     public void execute() {
 
-        double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND;
-        double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND;
-        double rotation = rotLimiter.calculate(m_rotationSupplier.getAsDouble()) * DriveTrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+        double xSpeed = m_translationXSupplier.getAsDouble() * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND;
+        double ySpeed = m_translationYSupplier.getAsDouble() * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND;
+        double rotation = m_rotationSupplier.getAsDouble() * DriveTrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
 
         if(m_drivetrainSubsystem.isOnPrecisionMode())
         {

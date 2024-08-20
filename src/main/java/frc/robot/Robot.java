@@ -35,14 +35,13 @@ public class Robot extends TimedRobot {
 
   private int i = 0;
 
-  SendableChooser<Command> m_chooser;
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
     m_oi = new OI(m_robotContainer , m_robotContainer.getPilot(), m_robotContainer.getCopilot());
     m_oi.configureButtonBindings();
-    m_chooser = m_robotContainer.m_auto_chooser;
+    m_robotContainer.configureCommands();
     
   }
   
@@ -72,7 +71,7 @@ public class Robot extends TimedRobot {
     //m_autonomousCommand = new AutoDriveToPosition(m_robotContainer.getDriveTrain() , 0, 0,-1,0,0,90);
     
     CommandScheduler.getInstance().run();
-        m_autonomousCommand = m_chooser.getSelected();
+        m_autonomousCommand = getRobotContainer().getChooser().getSelected();
         // schedule the autonomous command (example)
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();

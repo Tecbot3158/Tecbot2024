@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import java.util.function.BooleanSupplier;
@@ -22,8 +23,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.RampOff;
 import frc.robot.commands.TestAuto;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.Intake.InstaIntakeIn;
+import frc.robot.commands.Intake.InstaIntakeOff;
 import frc.robot.commands.autos.AutoDriveAndShoot;
 import frc.robot.commands.autos.AutoDriveAndShootLeftSite;
 import frc.robot.commands.autos.AutoDriveAndShootLeftSiteRed;
@@ -32,6 +36,7 @@ import frc.robot.commands.autos.AutoDriveAndShootRightSite;
 import frc.robot.commands.autos.AutoDriveAndShootRightSiteRed;
 import frc.robot.commands.autos.AutoDriveShootAndMid;
 import frc.robot.commands.autos.AutoDriveShootAndMidRed;
+import frc.robot.commands.shooter.ShootToSpeaker;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSensorSubsystem;
@@ -92,6 +97,10 @@ public class RobotContainer {
     rampSensorSubsystem = new RampSensorSubsystem();
     //climber.setController(m_controller.getHID() );
     
+    
+  }
+  public void configureCommands()
+  {
     DefaultDriveCommand ddc = new DefaultDriveCommand(
       m_drivetrainSubsystem,
       () -> -modifyAxis(m_controller.getLeftY()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND,
@@ -99,7 +108,13 @@ public class RobotContainer {
       () -> -modifyAxis(m_controller.getRightX()) * DriveTrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND );
     m_drivetrainSubsystem.setDefaultCommand(ddc);
 
-    // Configure the button bindings
+   
+
+    NamedCommands.registerCommand("InstaIntakeIn", new InstaIntakeIn());
+    NamedCommands.registerCommand("InstaIntakeOff", new InstaIntakeOff());
+    NamedCommands.registerCommand("ShootToSpeaker", new ShootToSpeaker());
+    NamedCommands.registerCommand("RampOff", new RampOff());
+
     AutoDriveShoot = new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem);
     AutoDriveShootRed = new AutoDriveAndShootRed(m_drivetrainSubsystem, rampSubsystem);
     AutoDriveShootLeftSite = new AutoDriveAndShootLeftSite(m_drivetrainSubsystem, rampSubsystem);
@@ -123,10 +138,16 @@ public class RobotContainer {
     m_auto_chooser.addOption("AutoDriveShootMidRed", new AutoDriveShootAndMidRed(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("TestAuto", new TestAuto(m_drivetrainSubsystem));
     m_auto_chooser.addOption("PathPlannerTest", new PathPlannerAuto("PathPlannerTest"));
+    m_auto_chooser.addOption("ThreeNotes", new PathPlannerAuto("ThreeNotes"));
+    m_auto_chooser.addOption("ChoreoTest", new PathPlannerAuto("ChoreoTest"));
 
     SmartDashboard.putData(m_auto_chooser);
   }
 
+  public SendableChooser<Command> getChooser()
+  {
+    return m_auto_chooser;
+  }
   public DriveTrain getDriveTrain(){
 
       return m_drivetrainSubsystem;

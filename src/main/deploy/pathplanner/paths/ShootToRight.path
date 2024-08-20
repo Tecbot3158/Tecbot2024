@@ -1,0 +1,70 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.8061668427374873,
+        "y": 5.5430292057165325
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.6111716784003651,
+        "y": 4.143647242163843
+      },
+      "isLocked": false,
+      "linkedName": "ShootingPos"
+    },
+    {
+      "anchor": {
+        "x": 2.683645082254536,
+        "y": 4.0363999017784264
+      },
+      "prevControl": {
+        "x": 1.6404209530509337,
+        "y": 4.007150627127858
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RightNote"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "In",
+      "waypointRelativePos": 0.6,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "InstaIntakeIn"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 270.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "AllianceNotes",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

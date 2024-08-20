@@ -2,15 +2,16 @@ package frc.robot;
 
 import java.security.interfaces.RSAMultiPrimePrivateCrtKey;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.RampAction;
+import frc.robot.commands.RampOff;
 import frc.robot.commands.Sequence1;
 import frc.robot.commands.Sequence2;
-import frc.robot.commands.IntakeIn;
 import frc.robot.commands.OffL;
 /*import frc.robot.commands.S1F;
 import frc.robot.commands.S2F;
@@ -18,10 +19,14 @@ import frc.robot.commands.S3F;*/
 import frc.robot.commands.OnL;
 import frc.robot.commands.StopMotor;
 import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.Intake.InstaIntakeIn;
+import frc.robot.commands.Intake.InstaIntakeOff;
+import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.commands.autos.swerve.PathfindToSpeaker;
 import frc.robot.commands.autos.swerve.TogglePrecisionMode;
 import frc.robot.commands.autos.swerve.TurnToAngle;
 import frc.robot.commands.shooter.ControlShooter;
+import frc.robot.commands.shooter.ShootToSpeaker;
 import frc.robot.commands.RampAction;
 /*import frc.robot.commands.S1B;
 import frc.robot.commands.S2B;
@@ -53,7 +58,7 @@ public class OI {
             new PathConstraints(2, 2,
              1, 2)));
 
-        pilot.a().whileTrue(new ControlShooter(3200, 3200));
+        pilot.a().whileTrue(new ShootToSpeaker());
         pilot.start().onTrue(new TogglePrecisionMode());
 
         copilot.a().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0));
@@ -62,7 +67,7 @@ public class OI {
     
         /*pilot.whenPressed(ButtonType.LB, new S3F());
         pilot.whenPressed(ButtonType.POV_UP, new S3B());*/
-
+        
     }
 
     

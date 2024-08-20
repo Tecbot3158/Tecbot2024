@@ -369,10 +369,15 @@ public class DriveTrain extends PIDSubsystem {
     SmartDashboard.putNumber("X Speed", getChassisSpeeds().vxMetersPerSecond);
     SmartDashboard.putNumber("Y Speed", getChassisSpeeds().vyMetersPerSecond);
 
+    SmartDashboard.putNumber("BL abs angle", m_backLeftModule.getSteerEncoder().getAbsoluteAngle());
+    SmartDashboard.putNumber("BR abs angle", m_backRightModule.getSteerEncoder().getAbsoluteAngle());
+    SmartDashboard.putNumber("FL abs angle", m_frontLeftModule.getSteerEncoder().getAbsoluteAngle());
+    SmartDashboard.putNumber("FR abs angle", m_frontRightModule.getSteerEncoder().getAbsoluteAngle());
+
     if(Robot.getRobotContainer().getVision().hasPose())
     {
       var estimatedVisionPose = Robot.getRobotContainer().getVision().getEstimatedPosition();
-      poseEstimator.addVisionMeasurement(estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
+      //poseEstimator.addVisionMeasurement(estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
     }
 
     m_field.setRobotPose(getPose2d());
