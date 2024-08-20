@@ -377,7 +377,7 @@ public class DriveTrain extends PIDSubsystem {
     if(Robot.getRobotContainer().getVision().hasPose())
     {
       var estimatedVisionPose = Robot.getRobotContainer().getVision().getEstimatedPosition();
-      //poseEstimator.addVisionMeasurement(estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
+      poseEstimator.addVisionMeasurement(estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
     }
 
     m_field.setRobotPose(getPose2d());
