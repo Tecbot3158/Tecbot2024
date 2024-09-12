@@ -13,13 +13,15 @@ import frc.robot.subsystems.RampSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Sequence2 extends SequentialCommandGroup {
+public class AutoSequence1 extends SequentialCommandGroup {
   /** Creates a new AutonomousRoute. */
+  
 
-
-  public Sequence2(RampSubsystem ramp, double ta, double tb) {
+  public AutoSequence1(RampSubsystem ramp, double ta, double tb, double rs) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RampActionEternal(ramp,0.08, -0.37, 0, ta), new RampActionEternal(ramp, .08, -0.37, 0.5, tb));
+    addCommands(new RampActionEternal(ramp,0.6, -1, 0, ta), new RampActionEternal(
+      ramp, .6, -1, rs, tb));
   }
+
 }

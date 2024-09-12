@@ -20,6 +20,7 @@ import frc.robot.commands.RampAction;
 import frc.robot.commands.S2B;
 import frc.robot.commands.S3B;*/
 import frc.robot.resources.TecbotConstants;
+import frc.robot.subsystems.DriveTrain;
 
 public class OI {
     public static OI instance;
@@ -39,11 +40,12 @@ public class OI {
         pilot.leftBumper().whileTrue( new Sequence2(robotContainer.getRampSubsystem(), 1, 10));
         pilot.b().whileTrue( new RampAction(robotContainer.getRampSubsystem(),-0.3, 0.3, 0.0)  );
         pilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(), 0.6, -1, 0)  );
-        pilot.button(6).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
+        pilot.pov(90).whileTrue(new ZeroGyroCommand(robotContainer.getDriveTrain()));
 
         copilot.a().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0));
         copilot.b().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .08, -.31, 0));
         copilot.x().whileTrue(new RampAction(robotContainer.getRampSubsystem(), 0.55, -.95, 0));
+        copilot.y().whileTrue( new RampAction(robotContainer.getRampSubsystem(),-0.3, 0.3, 0.0)  );
     
         /*pilot.whenPressed(ButtonType.LB, new S3F());
         pilot.whenPressed(ButtonType.POV_UP, new S3B());*/

@@ -12,9 +12,15 @@ public class AutoDriveAndShootLeftSiteBlue extends SequentialCommandGroup{
             new AutoDriveToPosition(driveTrain , 0, 0,.60,0,0,0, 1.6),
             new Sequence1( ramp, 1 , 0.5),
             new ZeroRamp(ramp),
-            new AutoDriveToPosition(driveTrain, .60, 0, 1.25, 0.40, 0, 0, 1.6),
+            /*new AutoDriveToPosition(driveTrain, 0.6, 0, 1.5, 0.65, 0, 0, 1.6),
+            new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.5, 0.65, 2.4, 0.65, 0, 0, 0.5, 0.53, 1.7),
+            new AutoDriveToPosition(driveTrain, 2.4, 0.65, 0.6, 0, 0, 0, 0),
+            new Sequence1(ramp, 1, 0.5),
+            new ZeroRamp(ramp) */
+           new AutoDriveToPosition(driveTrain, .60, 0, 1.25, 0.40, 0, 0, 1.6),
             new AutoDriveToPosition(driveTrain, 1.25, 0.40, 2.1,-1, 0, 0, 2)
         );
-
+ 
     }
 }
+ 

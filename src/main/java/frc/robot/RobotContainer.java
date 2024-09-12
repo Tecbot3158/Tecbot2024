@@ -5,6 +5,9 @@
 package frc.robot;
 
 import java.util.function.DoubleSupplier;
+
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.util.sendable.Sendable;
@@ -19,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoDriveAndShoot;
+import frc.robot.commands.AutoDriveAndShootBlue;
 import frc.robot.commands.AutoDriveAndShootLeftSite;
 import frc.robot.commands.AutoDriveAndShootLeftSiteRed;
 import frc.robot.commands.AutoDriveAndShootRed;
@@ -33,6 +37,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.RampSensorSubsystem;
 import frc.robot.subsystems.RampSubsystem;
+import frc.robot.subsystems.Vision;
 
 
 /**
@@ -43,14 +48,15 @@ import frc.robot.subsystems.RampSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain m_drivetrainSubsystem = new DriveTrain();
+  private final DriveTrain m_drivetrainSubsystem;
 
   //private final Climber climber;
   private final RampSubsystem rampSubsystem;
   private final Climber climber;
 
-
   private final RampSensorSubsystem rampSensorSubsystem;
+
+  private final Vision vision;
 
   private final  CommandXboxController m_controller = new CommandXboxController(0);
 
@@ -79,11 +85,17 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
 
+
     //climber = new Climber();
+    m_drivetrainSubsystem = new DriveTrain(this);
     rampSubsystem = new RampSubsystem(this);
     climber = new Climber(this);
 
     rampSensorSubsystem = new RampSensorSubsystem();
+
+    vision = new Vision();
+
+    
     //climber.setController(m_controller.getHID() );
     
     DefaultDriveCommand ddc = new DefaultDriveCommand(
@@ -92,6 +104,8 @@ public class RobotContainer {
       () -> -modifyAxis(m_controller.getLeftX()) * DriveTrain.MAX_VELOCITY_METERS_PER_SECOND,
       () -> -modifyAxis(m_controller.getRightX()) * DriveTrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND );
     m_drivetrainSubsystem.setDefaultCommand(ddc);
+
+
 
     // Configure the button bindings
     AutoDriveShoot = new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem);
@@ -108,6 +122,7 @@ public class RobotContainer {
     m_auto_chooser = new SendableChooser<>();
     
     m_auto_chooser.setDefaultOption("AutoDriveShoot", new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootBlue", new AutoDriveAndShootBlue(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootRed", new AutoDriveAndShootRed(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootLeftSite", new AutoDriveAndShootLeftSite(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootLeftSiteRed", new AutoDriveAndShootLeftSiteRed(m_drivetrainSubsystem, rampSubsystem));
@@ -115,7 +130,8 @@ public class RobotContainer {
     m_auto_chooser.addOption("AutoDriveShootRightSiteRed", new AutoDriveAndShootRightSiteRed(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootMid", new AutoDriveShootAndMid(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootMidRed", new AutoDriveShootAndMidRed(m_drivetrainSubsystem, rampSubsystem));
-    m_auto_chooser.addOption("TestAuto", new TestAuto(m_drivetrainSubsystem));
+   
+
 
     SmartDashboard.putData(m_auto_chooser);
   }
@@ -147,11 +163,17 @@ public class RobotContainer {
   public RampSensorSubsystem getRampSensorSubsystem(){
     return rampSensorSubsystem;
   }
+
+  public Vision getVision(){
+    return vision;
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
+  
+
 
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {
@@ -174,4 +196,6 @@ public class RobotContainer {
 
     return value;
   }
+
+
 }

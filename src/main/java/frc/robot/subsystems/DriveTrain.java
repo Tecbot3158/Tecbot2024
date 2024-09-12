@@ -6,11 +6,18 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+import com.swervedrivespecialties.swervelib.DriveController;
 import com.swervedrivespecialties.swervelib.MkSwerveModuleBuilder;
 import com.swervedrivespecialties.swervelib.MotorType;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
+import edu.wpi.first.hal.simulation.DriverStationDataJNI;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,20 +26,30 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.resources.Navx;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 
 import static frc.robot.Constants.*;
 
+import java.lang.reflect.Field;
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
 public class DriveTrain extends SubsystemBase {
+  RobotContainer robotContainer;
 
   /**
+   * 
    * The maximum voltage that will be delivered to the drive motors.
    * <p>
    * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
@@ -85,12 +102,19 @@ public class DriveTrain extends SubsystemBase {
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
   public static SwerveDriveOdometry odometer;
+  private Field2d field;
   
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
-  public DriveTrain() {
+  private final SwerveDrivePoseEstimator m_PoseEstimator;
+
+  Pose2d targetPose;
+
+  public DriveTrain(RobotContainer rc) {
+    robotContainer = rc;
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+
 
     // There are 4 methods you can call to create your swerve modules.
     // The method you use depends on what motors you are using.
@@ -118,7 +142,7 @@ public class DriveTrain extends SubsystemBase {
                 .withSize(2, 4)
                 .withPosition(0, 0))
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR)
+                .withDriveMotor(MotorType.FALCON, Constants.FRONT_LEFT_MODULE_DRIVE_MOTOR)
                 .withSteerMotor(MotorType.NEO, Constants.FRONT_LEFT_MODULE_STEER_MOTOR)
                 .withSteerEncoderPort(Constants.FRONT_LEFT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.FRONT_LEFT_MODULE_STEER_OFFSET)
@@ -132,7 +156,7 @@ public class DriveTrain extends SubsystemBase {
                 .withSize(2, 4)
                 .withPosition(2, 0))
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR)
+                .withDriveMotor(MotorType.FALCON, Constants.FRONT_RIGHT_MODULE_DRIVE_MOTOR)
                 .withSteerMotor(MotorType.NEO, Constants.FRONT_RIGHT_MODULE_STEER_MOTOR)
                 .withSteerEncoderPort(Constants.FRONT_RIGHT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.FRONT_RIGHT_MODULE_STEER_OFFSET)
@@ -143,7 +167,7 @@ public class DriveTrain extends SubsystemBase {
                 .withSize(2, 4)
                 .withPosition(4, 0))
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR)
+                .withDriveMotor(MotorType.FALCON, Constants.BACK_LEFT_MODULE_DRIVE_MOTOR)
                 .withSteerMotor(MotorType.NEO, Constants.BACK_LEFT_MODULE_STEER_MOTOR)
                 .withSteerEncoderPort(Constants.BACK_LEFT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.BACK_LEFT_MODULE_STEER_OFFSET)
@@ -154,7 +178,7 @@ public class DriveTrain extends SubsystemBase {
                 .withSize(2, 4)
                 .withPosition(6, 0))
                 .withGearRatio(SdsModuleConfigurations.MK4I_L2)
-                .withDriveMotor(MotorType.NEO, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR)
+                .withDriveMotor(MotorType.FALCON, Constants.BACK_RIGHT_MODULE_DRIVE_MOTOR)
                 .withSteerMotor(MotorType.NEO, Constants.BACK_RIGHT_MODULE_STEER_MOTOR)
                 .withSteerEncoderPort(Constants.BACK_RIGHT_MODULE_STEER_ENCODER)
                 .withSteerOffset(Constants.BACK_RIGHT_MODULE_STEER_OFFSET)
@@ -169,6 +193,44 @@ public class DriveTrain extends SubsystemBase {
                   m_backRightModule.getPosition()
                 }
               );
+
+    m_PoseEstimator = new SwerveDrivePoseEstimator(m_kinematics, getGyroscopeRotation(), 
+      new SwerveModulePosition[]{
+                  m_frontLeftModule.getPosition(),
+                  m_frontRightModule.getPosition(),
+                  m_backLeftModule.getPosition(),
+                  m_backRightModule.getPosition()}, 
+                  getPose2d());
+
+
+        AutoBuilder.configureHolonomic(
+                                        this::getPose2d,
+                                        this::resetPose,
+                                        this::getChassisSpeeds, 
+                                        this::drive, 
+                                         new HolonomicPathFollowerConfig(
+                                          new PIDConstants(Constants.kP_TRASLATION,Constants.kI_TRASLATION,Constants.kD_TRASLATION),
+                                          new PIDConstants(Constants.kP_ROTATION,Constants.kI_ROTATION,Constants.kD_ROTATION),
+                                          Constants.MAX_MODULE_SPEED,
+                                          Constants.DRIVE_BASE_RADIUS,
+                                          new ReplanningConfig()
+                                         ),
+
+                                         () -> {
+
+                                          var alliance = DriverStation.getAlliance();
+                                          if (alliance.isPresent()){
+                                            return alliance.get() == DriverStation.Alliance.Red;
+                                          }
+                                          return false;
+                                         },
+                                        this);
+
+    field = new Field2d();
+    SmartDashboard.putData(field);
+
+  
+
   }
 
   /**
@@ -199,6 +261,20 @@ public class DriveTrain extends SubsystemBase {
     return odometer.getPoseMeters();
   }
 
+  public void resetPose(Pose2d pose2d){
+   odometer.resetPosition(getGyroscopeRotation(), new SwerveModulePosition[]{ 
+                  m_frontLeftModule.getPosition(),
+                  m_frontRightModule.getPosition(),
+                  m_backLeftModule.getPosition(),
+                  m_backRightModule.getPosition()
+                },
+                 pose2d);
+  }
+
+  public ChassisSpeeds getChassisSpeeds(){
+    return m_chassisSpeeds;
+  }
+  
 
   @Override
   public void periodic() {
@@ -220,14 +296,31 @@ public class DriveTrain extends SubsystemBase {
     positions[3] = m_backRightModule.getPosition();
     
     odometer.update(getGyroscopeRotation(),positions);
+    m_PoseEstimator.update(getGyroscopeRotation(), positions);
+
+    updatePoseEstimartor();
+
+
     double PositionX = odometer.getPoseMeters().getX();
     double PositionY = odometer.getPoseMeters().getY();
-    double PositionR = m_navx.getAngle();
     SmartDashboard.putNumber("X", PositionX);
     SmartDashboard.putNumber("Y", PositionY);
-    SmartDashboard.putNumber("R", PositionR);
-
+    
     SmartDashboard.putNumber("Navx", m_navx.getAngle());
 
+
+
   }
+
+
+  public void updatePoseEstimartor(){
+    Optional<EstimatedRobotPose> updatedPose = robotContainer.getVision().getEstimateGlobalPose();
+
+    if(updatedPose != null && !updatedPose.isEmpty()){
+      m_PoseEstimator.addVisionMeasurement(updatedPose.get().estimatedPose.toPose2d(), updatedPose.get().timestampSeconds);
+      field.setRobotPose(updatedPose.get().estimatedPose.toPose2d());}
+      System.out.println("a");
+    }
+
+     
 }

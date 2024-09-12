@@ -54,8 +54,8 @@ public class AutoDriveToPosition extends Command {
     double dy = finalY - initialY;
     totalMagnitude = (new Translation2d(dx, dy) ).getNorm();
 
-    double dr = finalR - initialR;
-    totalRotation = (new Rotation2d(dr)).getRadians();
+   /*  double dm = finalR - initialR;
+    totalRotation = (new Rotation2d(dm)).getRadians();*/
 
   }
 
@@ -63,26 +63,26 @@ public class AutoDriveToPosition extends Command {
   @Override
   public void execute() {
 
-    double currentangle = driveTrain.getGyroscopeRotation().getDegrees();
+    double currentangle = driveTrain.getGyroscopeRotation().getRadians();
 
     Translation2d currentTranslation = driveTrain.getPose2d().getTranslation();
     // determine magnitude from origin pos to final pos
     double dx = finalX - currentTranslation.getX();
     double dy = finalY - currentTranslation.getY();
 
-    double dr = finalR - currentangle;
+    /*double dr = finalR - currentangle;*/
 
     SmartDashboard.putNumber("Sx", dx);
     SmartDashboard.putNumber("Sy", dy);
-    SmartDashboard.putNumber("Sr", dr);
+   // SmartDashboard.putNumber("Sr", dr);
 
-    SmartDashboard.putNumber("Angle", driveTrain.getGyroscopeRotation().getRadians());
+    //SmartDashboard.putNumber("Angle", driveTrain.getGyroscopeRotation().getRadians());
 
     Translation2d tr = new Translation2d(dx, dy);
     double advance = tr.getNorm()/totalMagnitude;
 
-    Rotation2d rt = new Rotation2d(dr);
-    double rotationAdvance = rt.getRadians()/totalRotation;
+    //Rotation2d rt = new Rotation2d(dr);
+    //double rotationAdvance = totalRotation/rt.getRadians();
     
     currentMagnitude = tr.getNorm(); // vector size
     tr = tr.div(currentMagnitude);
@@ -95,6 +95,10 @@ public class AutoDriveToPosition extends Command {
     System.out.println(totalMagnitude);
     
     System.out.println("Advance : " + advance);
+
+    //SmartDashboard.putNumber("Rotation advance:", rotationAdvance);
+    SmartDashboard.putNumber("Total Rotation:", totalRotation);
+    //SmartDashboard.putNumber("rt", rt.getRadians());
     // determine percentage. 
      
     if( advance > 0.05){
@@ -110,7 +114,7 @@ public class AutoDriveToPosition extends Command {
       advance = Math.max(0.2,advance); // minimum advance
     }
 
-    if( rotationAdvance > 0.05){
+   /* if( rotationAdvance > 0.05){
 
       //advance = 1; // is a percentual control. 
       if( rotationAdvance < 0.9 )
@@ -123,6 +127,7 @@ public class AutoDriveToPosition extends Command {
       rotationAdvance = Math.max(0.2,advance); // minimum advance
     }
 
+    */
 
     System.out.println("Vx : " + tr.getX()*advance );
     System.out.println("Vy : " + tr.getY()*advance );
@@ -131,7 +136,7 @@ public class AutoDriveToPosition extends Command {
     double xSpeed = tr.getX()*advance;
     double ySpeed = tr.getY()*advance;
 
-    double rSpeed = dr*rotationAdvance;
+   // double rSpeed = dr*rotationAdvance;
 
     
     /* 
@@ -154,7 +159,7 @@ public class AutoDriveToPosition extends Command {
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                         xSpeed,
                         ySpeed,
-                        dr*(Math.PI/180),
+                        0,
                         driveTrain.getGyroscopeRotation()
                 )
         );
@@ -174,7 +179,7 @@ public class AutoDriveToPosition extends Command {
                         0,
                         driveTrain.getGyroscopeRotation()
                 )
-        );
+        ); 
     // 
 
 

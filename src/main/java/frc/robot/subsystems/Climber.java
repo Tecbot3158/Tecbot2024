@@ -23,8 +23,8 @@ public class Climber extends SubsystemBase {
   public Climber(RobotContainer rc){
    robotContainer = rc;
 
-   cmL = new TecbotSpeedController(RobotMap.climberPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
-   cmR = new TecbotSpeedController(RobotMap.climberPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
+   cmL = new TecbotSpeedController(RobotMap.climberPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
+   cmR = new TecbotSpeedController(RobotMap.climberPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
 
    leftEncoderZeroValue = cmL.getEncPosition();
    rightEncoderZeroValue = cmR.getEncPosition();
@@ -51,7 +51,7 @@ public class Climber extends SubsystemBase {
 
      
     if( cmR.getEncPosition() <= (rightEncoderZeroValue - 18) && climberSpeedR < 0){
-      climberSpeedR = 0;
+      //climberSpeedR = 0;
     }
 
     /* 
@@ -61,7 +61,7 @@ public class Climber extends SubsystemBase {
     
 
     if( (cmL.getEncPosition() >= leftEncoderZeroValue + 18) && climberSpeedL > 0){
-      climberSpeedL = 0;
+      //climberSpeedL = 0;
     }
 
     /*

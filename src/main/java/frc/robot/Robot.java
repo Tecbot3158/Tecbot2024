@@ -10,6 +10,9 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.CvSink;
 import edu.wpi.first.cscore.CvSource;
@@ -21,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoDriveAndShoot;
 import frc.robot.commands.AutoDriveToPosition;
 import frc.robot.commands.Sequence1;
+import frc.robot.commands.ZeroGyroCommand;
 import frc.robot.resources.TecbotPWMLEDStrip;
 
 public class Robot extends TimedRobot {
@@ -38,6 +42,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    Pathfinding.setPathfinder(new LocalADStar());
     m_oi = new OI(m_robotContainer , m_robotContainer.getPilot(), m_robotContainer.getCopilot());
     m_oi.configureButtonBindings();
     m_chooser = m_robotContainer.m_auto_chooser;

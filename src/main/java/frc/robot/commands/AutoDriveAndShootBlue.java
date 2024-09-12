@@ -41,16 +41,25 @@ public class AutoDriveAndShootBlue extends SequentialCommandGroup {
     new AutoDriveToPosition(driveTrain , 0, 0,.50,0,0,0, 1.7),
     new Sequence1( ramp, 0.50 , 0.90),
     new ZeroRamp(ramp),
-    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 0.5, 0, 2.00, 0, 0, 0, 0.30, 0.40, 1.6),//valor original rm .30
-    new AutoDriveToPosition(driveTrain , 2.00, 0,.40,0,0,0, 1.7),
-    new Sequence1( ramp, 0.40 , 0.90),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 0.5, 0, 1.6, 0, 0, 0, 0.50, 0.65, 1.6),//valor original rm .30
+    new AutoDriveToPosition(driveTrain , 1.6 ,0,.5 ,0,0,0, 1.7),
+    new AutoSequence1( ramp, 0.7 , 0.90, 0.8),
     new ZeroRamp(ramp),
-    new AutoDriveToPosition(driveTrain , 0.40, 0,1.00,1.55,0,0, 1.7),
-    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.00, 1.55, 2.00, 1.55, 0, 0, .40, .43, 1.6),//valor originial rm 0.25
-    new AutoDriveToPosition(driveTrain , 2.00, 1.55,0.30,0.0,0,0, 1.7),
-    new Sequence1( ramp, 0.70 , 1.0),
+    new AutoDriveToPosition(driveTrain , 0.5, 0,1.00,1.55,0,0, 1.7),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1.00, 1.55, 1.7, 1.55, 0, 0, .50, .65, 1.6),//valor originial rm 0.25
+    new AutoDriveToPosition(driveTrain , 1.75, 1.55,0.5,0.0,0,0, 1.7),
+    new AutoSequence1( ramp, 0.70 , 1.0,.7),
     new ZeroRamp(ramp)
+      /*new AutoDriveToPosition(driveTrain, 0.5, 0, 1, -1.55, 0, 0, 1.7),
+    new AutoDriveToPositionWhileRolling(driveTrain, ramp, 1, -1.55, 1.7, -1.55, 0, 0, 0.5, 0.6, 1.6),
+    new AutoDriveToPosition(driveTrain, 1.7, -1.55, 0.5, 0, 0, 0, 1.6),
+    new Sequence1(ramp, .7, 1),
+    new ZeroRamp(ramp)*/
     );
+    
+    
+
+
     
 
 

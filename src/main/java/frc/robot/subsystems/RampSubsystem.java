@@ -24,9 +24,9 @@ public class RampSubsystem extends SubsystemBase {
 
   public RampSubsystem(RobotContainer rc){
    robotContainer = rc;
-   
-   sm1 = new TecbotSpeedController(RobotMap.shooterPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
-   sm2 = new TecbotSpeedController(RobotMap.shooterPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
+    
+   sm1 = new TecbotSpeedController(RobotMap.shooterPorts[1],TypeOfMotor.CAN_SPARK_BRUSHLESS);
+   sm2 = new TecbotSpeedController(RobotMap.shooterPorts[0],TypeOfMotor.CAN_SPARK_BRUSHLESS);
 
    im1 = new TecbotSpeedController(RobotMap.intakePort[0], TypeOfMotor.VICTOR_SPX);
 
@@ -57,7 +57,7 @@ public class RampSubsystem extends SubsystemBase {
 
 
   public void getRamp(double sTopSpeed, double sBottomSpeed, double intakeSeed){
-    System.out.println(sTopSpeed + " // "  +  sBottomSpeed + " // " + intakeSeed  );
+    //System.out.println(sTopSpeed + " // "  +  sBottomSpeed + " // " + intakeSeed  );
     sm1.set(sTopSpeed);
     sm2.set(-sBottomSpeed);
     im1.set(intakeSeed);
