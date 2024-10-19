@@ -7,6 +7,10 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.RampAction;
 import frc.robot.commands.RampOff;
@@ -64,7 +68,14 @@ public class OI {
         copilot.a().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0));
         copilot.b().whileTrue(new RampAction(robotContainer.getRampSubsystem(), .08, -.31, 0));
         copilot.x().whileTrue(new RampAction(robotContainer.getRampSubsystem(), 0.55, -.95, 0));
-    
+        
+        copilot.y().whileTrue(
+            new SequentialCommandGroup(
+                new ParallelDeadlineGroup(
+                    new WaitCommand(1),
+                    new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0) ),
+                new RampAction(robotContainer.getRampSubsystem(), .6, -1, 0.5)) );     
+            
         /*pilot.whenPressed(ButtonType.LB, new S3F());
         pilot.whenPressed(ButtonType.POV_UP, new S3B());*/
         

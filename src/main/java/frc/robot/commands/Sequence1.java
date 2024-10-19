@@ -20,7 +20,7 @@ public class Sequence1 extends SequentialCommandGroup {
   public Sequence1(RampSubsystem ramp, double ta, double tb) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new RampActionEternal(ramp,0.6, -1, 0, ta), new RampActionEternal(
+    addCommands(new RampActionEternal(ramp,1, -0.5, 0, ta), new RampActionEternal(
       ramp, .6, -1, 0.5, tb));
   }
 
