@@ -10,12 +10,16 @@ import com.pathplanner.lib.commands.PathfindHolonomic;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+import com.swervedrivespecialties.swervelib.DriveController;
 import com.swervedrivespecialties.swervelib.MkSwerveModuleBuilder;
 import com.swervedrivespecialties.swervelib.MotorType;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.hal.simulation.DriverStationDataJNI;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -46,8 +50,20 @@ import static frc.robot.Constants.*;
 import java.security.cert.TrustAnchor;
 
 public class DriveTrain extends PIDSubsystem {
+import frc.robot.RobotContainer;
+
+import static frc.robot.Constants.*;
+
+import java.lang.reflect.Field;
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
+public class DriveTrain extends SubsystemBase {
+  RobotContainer robotContainer;
 
   /**
+   * 
    * The maximum voltage that will be delivered to the drive motors.
    * <p>
    * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
@@ -118,6 +134,7 @@ public class DriveTrain extends PIDSubsystem {
       Constants.DRIVETRAIN_TURN_KI, Constants.DRIVETRAIN_TURN_KD)); 
 
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+
 
     // There are 4 methods you can call to create your swerve modules.
     // The method you use depends on what motors you are using.
@@ -256,6 +273,20 @@ public class DriveTrain extends PIDSubsystem {
     return m_chassisSpeeds;
   }
 
+  public void resetPose(Pose2d pose2d){
+   odometer.resetPosition(getGyroscopeRotation(), new SwerveModulePosition[]{ 
+                  m_frontLeftModule.getPosition(),
+                  m_frontRightModule.getPosition(),
+                  m_backLeftModule.getPosition(),
+                  m_backRightModule.getPosition()
+                },
+                 pose2d);
+  }
+
+  public ChassisSpeeds getChassisSpeeds(){
+    return m_chassisSpeeds;
+  }
+  
 
   public Pose2d getPose2d(){
     //return odometer.getPoseMeters();

@@ -22,6 +22,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AutoDriveAndShoot;
+import frc.robot.commands.AutoDriveAndShootBlue;
+import frc.robot.commands.AutoDriveAndShootLeftSite;
+import frc.robot.commands.AutoDriveAndShootLeftSiteRed;
+import frc.robot.commands.AutoDriveAndShootRed;
+import frc.robot.commands.AutoDriveAndShootRightSite;
+import frc.robot.commands.AutoDriveAndShootRightSiteRed;
+import frc.robot.commands.AutoDriveShootAndMid;
+import frc.robot.commands.AutoDriveShootAndMidRed;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.RampOff;
 import frc.robot.commands.TestAuto;
@@ -52,14 +61,15 @@ import frc.robot.subsystems.Vision;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveTrain m_drivetrainSubsystem = new DriveTrain();
+  private final DriveTrain m_drivetrainSubsystem;
 
   //private final Climber climber;
   private final RampSubsystem rampSubsystem;
   private final Climber climber;
 
-
   private final RampSensorSubsystem rampSensorSubsystem;
+  private final Vision vision;
+
   private final Vision vision;
 
   private final  CommandXboxController m_controller = new CommandXboxController(0);
@@ -89,12 +99,18 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
 
+
     //climber = new Climber();
+    m_drivetrainSubsystem = new DriveTrain(this);
     rampSubsystem = new RampSubsystem(this);
     climber = new Climber(this);
     vision = new Vision();
 
     rampSensorSubsystem = new RampSensorSubsystem();
+
+    vision = new Vision();
+
+    
     //climber.setController(m_controller.getHID() );
     
     
@@ -115,6 +131,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShootToSpeaker", new ShootToSpeaker());
     NamedCommands.registerCommand("RampOff", new RampOff());
 
+
+
+    // Configure the button bindings
     AutoDriveShoot = new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem);
     AutoDriveShootRed = new AutoDriveAndShootRed(m_drivetrainSubsystem, rampSubsystem);
     AutoDriveShootLeftSite = new AutoDriveAndShootLeftSite(m_drivetrainSubsystem, rampSubsystem);
@@ -129,6 +148,7 @@ public class RobotContainer {
     m_auto_chooser = new SendableChooser<>();
     
     m_auto_chooser.setDefaultOption("AutoDriveShoot", new AutoDriveAndShoot(m_drivetrainSubsystem, rampSubsystem));
+    m_auto_chooser.addOption("AutoDriveShootBlue", new AutoDriveAndShootBlue(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootRed", new AutoDriveAndShootRed(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootLeftSite", new AutoDriveAndShootLeftSite(m_drivetrainSubsystem, rampSubsystem));
     m_auto_chooser.addOption("AutoDriveShootLeftSiteRed", new AutoDriveAndShootLeftSiteRed(m_drivetrainSubsystem, rampSubsystem));
@@ -140,6 +160,8 @@ public class RobotContainer {
     m_auto_chooser.addOption("PathPlannerTest", new PathPlannerAuto("PathPlannerTest"));
     m_auto_chooser.addOption("ThreeNotes", new PathPlannerAuto("ThreeNotes"));
     m_auto_chooser.addOption("ChoreoTest", new PathPlannerAuto("ChoreoTest"));
+   
+
 
     SmartDashboard.putData(m_auto_chooser);
   }
@@ -176,8 +198,7 @@ public class RobotContainer {
     return rampSensorSubsystem;
   }
 
-  public Vision getVision()
-  {
+  public Vision getVision(){
     return vision;
   }
   /**
@@ -185,6 +206,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  
+
 
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {
@@ -207,4 +230,6 @@ public class RobotContainer {
 
     return value;
   }
+
+
 }

@@ -26,12 +26,14 @@ public class ZeroGyroCommand extends Command {
   @Override
   public void execute() {
     dt.zeroGyroscope();
+    System.out.print("zero gyro");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     dt.zeroGyroscope();
+    System.out.println("zero gyro 1");
   }
 
   // Returns true when the command should end.
